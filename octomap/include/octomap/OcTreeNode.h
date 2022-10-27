@@ -89,6 +89,9 @@ namespace octomap
     /// adds p to the node's logOdds value (with no boundary / threshold checking!)
     void addValue(const float &p);
 
+    /// defined wether a Node is social considered or not
+    void setSocial(const bool &isSocial);
+
   protected:
     // "value" stores log odds occupancy probability
   };

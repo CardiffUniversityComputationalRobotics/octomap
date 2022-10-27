@@ -348,6 +348,8 @@ namespace octomap
       createdRoot = true;
     }
 
+    this->root->setSocial(social);
+
     return updateNodeRecurs(this->root, createdRoot, key, 0, log_odds_update, lazy_eval);
   }
 
@@ -357,7 +359,7 @@ namespace octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(value, key))
       return NULL;
-
+    this->root->setSocial(social);
     return updateNode(key, log_odds_update, lazy_eval);
   }
 
@@ -367,7 +369,7 @@ namespace octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(x, y, z, key))
       return NULL;
-
+    this->root->setSocial(social);
     return updateNode(key, log_odds_update, lazy_eval);
   }
 
@@ -377,7 +379,7 @@ namespace octomap
     float logOdds = this->prob_miss_log;
     if (occupied)
       logOdds = this->prob_hit_log;
-
+    this->root->setSocial(social);
     return updateNode(key, logOdds, lazy_eval);
   }
 
@@ -387,6 +389,7 @@ namespace octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(value, key))
       return NULL;
+    this->root->setSocial(social);
     return updateNode(key, occupied, lazy_eval);
   }
 
@@ -396,6 +399,7 @@ namespace octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(x, y, z, key))
       return NULL;
+    this->root->setSocial(social);
     return updateNode(key, occupied, lazy_eval);
   }
 

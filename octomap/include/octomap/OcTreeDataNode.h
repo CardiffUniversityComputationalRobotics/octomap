@@ -68,11 +68,11 @@ namespace octomap
 
   public:
     OcTreeDataNode();
-    OcTreeDataNode(T initVal);
+    OcTreeDataNode(T initVal, const bool social);
 
     /// Copy constructor, performs a recursive deep-copy of all children
     /// including node data in "value"
-    OcTreeDataNode(const OcTreeDataNode &rhs);
+    OcTreeDataNode(const OcTreeDataNode &rhs, const bool social);
 
     /// Delete only own members.
     /// OcTree maintains tree structure and must have deleted children already
@@ -121,6 +121,9 @@ namespace octomap
     AbstractOcTreeNode **children;
     /// stored data (payload)
     T value;
+
+    // social
+    bool social;
   };
 
 } // end namespace
