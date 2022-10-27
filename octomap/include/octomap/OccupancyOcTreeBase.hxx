@@ -329,7 +329,7 @@ namespace octomap
   }
 
   template <class NODE>
-  NODE *OccupancyOcTreeBase<NODE>::updateNode(const OcTreeKey &key, float log_odds_update, bool lazy_eval)
+  NODE *OccupancyOcTreeBase<NODE>::updateNode(const OcTreeKey &key, float log_odds_update, bool lazy_eval, bool social)
   {
     // early abort (no change will happen).
     // may cause an overhead in some configuration, but more often helps
@@ -352,7 +352,7 @@ namespace octomap
   }
 
   template <class NODE>
-  NODE *OccupancyOcTreeBase<NODE>::updateNode(const point3d &value, float log_odds_update, bool lazy_eval)
+  NODE *OccupancyOcTreeBase<NODE>::updateNode(const point3d &value, float log_odds_update, bool lazy_eval, bool social)
   {
     OcTreeKey key;
     if (!this->coordToKeyChecked(value, key))
@@ -362,7 +362,7 @@ namespace octomap
   }
 
   template <class NODE>
-  NODE *OccupancyOcTreeBase<NODE>::updateNode(double x, double y, double z, float log_odds_update, bool lazy_eval)
+  NODE *OccupancyOcTreeBase<NODE>::updateNode(double x, double y, double z, float log_odds_update, bool lazy_eval, bool social)
   {
     OcTreeKey key;
     if (!this->coordToKeyChecked(x, y, z, key))
@@ -372,7 +372,7 @@ namespace octomap
   }
 
   template <class NODE>
-  NODE *OccupancyOcTreeBase<NODE>::updateNode(const OcTreeKey &key, bool occupied, bool lazy_eval)
+  NODE *OccupancyOcTreeBase<NODE>::updateNode(const OcTreeKey &key, bool occupied, bool lazy_eval, bool social)
   {
     float logOdds = this->prob_miss_log;
     if (occupied)
@@ -382,7 +382,7 @@ namespace octomap
   }
 
   template <class NODE>
-  NODE *OccupancyOcTreeBase<NODE>::updateNode(const point3d &value, bool occupied, bool lazy_eval)
+  NODE *OccupancyOcTreeBase<NODE>::updateNode(const point3d &value, bool occupied, bool lazy_eval, bool social)
   {
     OcTreeKey key;
     if (!this->coordToKeyChecked(value, key))
@@ -391,7 +391,7 @@ namespace octomap
   }
 
   template <class NODE>
-  NODE *OccupancyOcTreeBase<NODE>::updateNode(double x, double y, double z, bool occupied, bool lazy_eval)
+  NODE *OccupancyOcTreeBase<NODE>::updateNode(double x, double y, double z, bool occupied, bool lazy_eval, bool social)
   {
     OcTreeKey key;
     if (!this->coordToKeyChecked(x, y, z, key))

@@ -193,7 +193,7 @@ namespace octomap
      *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
      * @return pointer to the updated NODE
      */
-    virtual NODE *updateNode(const OcTreeKey &key, float log_odds_update, bool lazy_eval = false);
+    virtual NODE *updateNode(const OcTreeKey &key, float log_odds_update, bool lazy_eval = false, bool social = false);
 
     /**
      * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
@@ -205,7 +205,7 @@ namespace octomap
      *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
      * @return pointer to the updated NODE
      */
-    virtual NODE *updateNode(const point3d &value, float log_odds_update, bool lazy_eval = false);
+    virtual NODE *updateNode(const point3d &value, float log_odds_update, bool lazy_eval = false, bool social = false);
 
     /**
      * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
@@ -219,7 +219,7 @@ namespace octomap
      *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
      * @return pointer to the updated NODE
      */
-    virtual NODE *updateNode(double x, double y, double z, float log_odds_update, bool lazy_eval = false);
+    virtual NODE *updateNode(double x, double y, double z, float log_odds_update, bool lazy_eval = false, bool social = false);
 
     /**
      * Integrate occupancy measurement.
@@ -230,7 +230,7 @@ namespace octomap
      *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
      * @return pointer to the updated NODE
      */
-    virtual NODE *updateNode(const OcTreeKey &key, bool occupied, bool lazy_eval = false);
+    virtual NODE *updateNode(const OcTreeKey &key, bool occupied, bool lazy_eval = false, bool social = false);
 
     /**
      * Integrate occupancy measurement.
@@ -242,7 +242,7 @@ namespace octomap
      *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
      * @return pointer to the updated NODE
      */
-    virtual NODE *updateNode(const point3d &value, bool occupied, bool lazy_eval = false);
+    virtual NODE *updateNode(const point3d &value, bool occupied, bool lazy_eval = false, bool social = false);
 
     /**
      * Integrate occupancy measurement.
@@ -256,7 +256,7 @@ namespace octomap
      *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
      * @return pointer to the updated NODE
      */
-    virtual NODE *updateNode(double x, double y, double z, bool occupied, bool lazy_eval = false);
+    virtual NODE *updateNode(double x, double y, double z, bool occupied, bool lazy_eval = false, bool social = false);
 
     /**
      * Creates the maximum likelihood map by calling toMaxLikelihood on all
