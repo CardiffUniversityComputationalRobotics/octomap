@@ -31,71 +31,84 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace octomap {
+namespace octomap
+{
 
   template <class TREETYPE>
-  MapNode<TREETYPE>::MapNode(): node_map(0) {
+  MapNode<TREETYPE>::MapNode() : node_map(0)
+  {
   }
 
   template <class TREETYPE>
-  MapNode<TREETYPE>::MapNode(TREETYPE* in_node_map, pose6d in_origin) {
-  	this->node_map = in_node_map;
-  	this->origin = in_origin;
+  MapNode<TREETYPE>::MapNode(TREETYPE *in_node_map, pose6d in_origin)
+  {
+    this->node_map = in_node_map;
+    this->origin = in_origin;
   }
 
   template <class TREETYPE>
-  MapNode<TREETYPE>::MapNode(const Pointcloud& in_cloud, pose6d in_origin): node_map(0) {
+  MapNode<TREETYPE>::MapNode(const Pointcloud &in_cloud, pose6d in_origin) : node_map(0)
+  {
   }
 
   template <class TREETYPE>
-  MapNode<TREETYPE>::MapNode(std::string filename, pose6d in_origin): node_map(0){
-  	readMap(filename);
-  	this->origin = in_origin;
-  	id = filename;
+  MapNode<TREETYPE>::MapNode(std::string filename, pose6d in_origin) : node_map(0)
+  {
+    readMap(filename);
+    this->origin = in_origin;
+    id = filename;
   }
 
   template <class TREETYPE>
-  MapNode<TREETYPE>::~MapNode() {
-  	clear();
+  MapNode<TREETYPE>::~MapNode()
+  {
+    clear();
   }
 
   template <class TREETYPE>
-  void MapNode<TREETYPE>::updateMap(const Pointcloud& cloud, point3d sensor_origin) {
+  void MapNode<TREETYPE>::updateMap(const Pointcloud &cloud, point3d sensor_origin)
+  {
   }
 
   template <class TREETYPE>
-  Pointcloud MapNode<TREETYPE>::generatePointcloud() {
+  Pointcloud MapNode<TREETYPE>::generatePointcloud()
+  {
     Pointcloud pc;
     point3d_list occs;
     node_map->getOccupied(occs);
-    for(point3d_list::iterator it = occs.begin(); it != occs.end(); ++it){
-    	pc.push_back(*it);
+    for (point3d_list::iterator it = occs.begin(); it != occs.end(); ++it)
+    {
+      pc.push_back(*it);
     }
     return pc;
   }
 
   template <class TREETYPE>
-  void MapNode<TREETYPE>::clear(){
-  	if(node_map != 0){
-  		delete node_map;
-  		node_map = 0;
-  		id = "";
-  		origin = pose6d(0.0,0.0,0.0,0.0,0.0,0.0);
-  	}
+  void MapNode<TREETYPE>::clear()
+  {
+    if (node_map != 0)
+    {
+      delete node_map;
+      node_map = 0;
+      id = "";
+      origin = pose6d(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    }
   }
 
   template <class TREETYPE>
-  bool MapNode<TREETYPE>::readMap(std::string filename){
-  	if(node_map != 0)
-  		delete node_map;
+  bool MapNode<TREETYPE>::readMap(std::string filename)
+  {
+    if (node_map != 0)
+      delete node_map;
 
     node_map = new TREETYPE(0.05);
     return node_map->readBinary(filename);
   }
 
   template <class TREETYPE>
-  bool MapNode<TREETYPE>::writeMap(std::string filename){
-  	return node_map->writeBinary(filename);
+  bool MapNode<TREETYPE>::writeMap(std::string filename)
+  {
+    return node_map->writeBinary(filename);
   }
 
 } // namespace

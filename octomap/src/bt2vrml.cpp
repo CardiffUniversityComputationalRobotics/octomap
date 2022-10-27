@@ -41,54 +41,56 @@
 using namespace std;
 using namespace octomap;
 
-void printUsage(char* self){
+void printUsage(char *self)
+{
   std::cerr << "\nUSAGE: " << self << " input.bt\n\n";
 
   std::cerr << "This tool will convert the occupied voxels of a binary OctoMap \n"
-      "file input.bt to a VRML2.0 file input.bt.wrl.\n\n";
+               "file input.bt to a VRML2.0 file input.bt.wrl.\n\n";
 
   std::cerr << "WARNING: The output files will be quite large!\n\n";
 
   exit(0);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   // default values:
   string vrmlFilename = "";
   string btFilename = "";
 
-  if (argc != 2 || (argc > 1 && strcmp(argv[1], "-h") == 0)){
+  if (argc != 2 || (argc > 1 && strcmp(argv[1], "-h") == 0))
+  {
     printUsage(argv[0]);
   }
 
   btFilename = std::string(argv[1]);
   vrmlFilename = btFilename + ".wrl";
 
-
   cout << "\nReading OcTree file\n===========================\n";
   // TODO: check if file exists and if OcTree read correctly?
-  OcTree* tree = new OcTree(btFilename);
-
+  OcTree *tree = new OcTree(btFilename);
 
   cout << "\nWriting occupied volumes to VRML\n===========================\n";
 
-  std::ofstream outfile (vrmlFilename.c_str());
+  std::ofstream outfile(vrmlFilename.c_str());
 
   outfile << "#VRML V2.0 utf8\n#\n";
-  outfile << "# created from OctoMap file "<<btFilename<< " with bt2vrml\n";
-
+  outfile << "# created from OctoMap file " << btFilename << " with bt2vrml\n";
 
   size_t count(0);
-  for(OcTree::leaf_iterator it = tree->begin(), end=tree->end(); it!= end; ++it) {
-    if(tree->isNodeOccupied(*it)){
+  for (OcTree::leaf_iterator it = tree->begin(), end = tree->end(); it != end; ++it)
+  {
+    if (tree->isNodeOccupied(*it))
+    {
       count++;
       double size = it.getSize();
       outfile << "Transform { translation "
-          << it.getX() << " " << it.getY() << " " << it.getZ()
-          << " \n  children ["
-          << " Shape { geometry Box { size "
-          << size << " " << size << " " << size << "} } ]\n"
-          << "}\n";
+              << it.getX() << " " << it.getY() << " " << it.getZ()
+              << " \n  children ["
+              << " Shape { geometry Box { size "
+              << size << " " << size << " " << size << "} } ]\n"
+              << "}\n";
     }
   }
 
@@ -96,7 +98,7 @@ int main(int argc, char** argv) {
 
   outfile.close();
 
-  std::cout << "Finished writing "<< count << " voxels to " << vrmlFilename << std::endl;
+  std::cout << "Finished writing " << count << " voxels to " << vrmlFilename << std::endl;
 
   return 0;
 }

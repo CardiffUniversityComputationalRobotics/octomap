@@ -43,106 +43,118 @@
 using namespace std;
 using namespace octomap;
 
-void printUsage(char* self){
+void printUsage(char *self)
+{
   std::cerr << "\nUSAGE: " << self << " input.(ot|bt|cot) [output.ot]\n\n";
 
   std::cerr << "This tool converts between OctoMap octree file formats, \n"
-      "e.g. to convert old legacy files to the new .ot format or to convert \n"
-      "between .bt and .ot files. The default output format is .ot.\n\n";
+               "e.g. to convert old legacy files to the new .ot format or to convert \n"
+               "between .bt and .ot files. The default output format is .ot.\n\n";
 
   exit(0);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   string inputFilename = "";
   string outputFilename = "";
 
-  if (argc < 2 || argc > 3 || (argc > 1 && strcmp(argv[1], "-h") == 0)){
+  if (argc < 2 || argc > 3 || (argc > 1 && strcmp(argv[1], "-h") == 0))
+  {
     printUsage(argv[0]);
   }
 
   inputFilename = std::string(argv[1]);
   if (argc == 3)
     outputFilename = std::string(argv[2]);
-  else{
+  else
+  {
     outputFilename = inputFilename + ".ot";
   }
 
-
   cout << "\nReading OcTree file\n===========================\n";
-  std::ifstream file(inputFilename.c_str(), std::ios_base::in |std::ios_base::binary);
+  std::ifstream file(inputFilename.c_str(), std::ios_base::in | std::ios_base::binary);
 
-  if (!file.is_open()){
-    OCTOMAP_ERROR_STR("Filestream to "<< inputFilename << " not open, nothing read.");
+  if (!file.is_open())
+  {
+    OCTOMAP_ERROR_STR("Filestream to " << inputFilename << " not open, nothing read.");
     exit(-1);
   }
 
   std::istream::pos_type streampos = file.tellg();
-  AbstractOcTree* tree;
+  AbstractOcTree *tree;
 
   // reading binary:
-  if (inputFilename.length() > 3 && (inputFilename.compare(inputFilename.length()-3, 3, ".bt") == 0)){
-    OcTree* binaryTree = new OcTree(0.1);
+  if (inputFilename.length() > 3 && (inputFilename.compare(inputFilename.length() - 3, 3, ".bt") == 0))
+  {
+    OcTree *binaryTree = new OcTree(0.1);
 
     if (binaryTree->readBinary(file) && binaryTree->size() > 1)
       tree = binaryTree;
-    else {
+    else
+    {
       OCTOMAP_ERROR_STR("Could not detect binary OcTree format in file.");
       exit(-1);
-
     }
-  } else {
+  }
+  else
+  {
     tree = AbstractOcTree::read(file);
-    if (!tree){
+    if (!tree)
+    {
       OCTOMAP_WARNING_STR("Could not detect OcTree in file, trying legacy formats.");
       // TODO: check if .cot extension, try old format only then
       // reset and try old ColorOcTree format:
       file.clear(); // clear eofbit of istream
       file.seekg(streampos);
-      ColorOcTree* colorTree = new ColorOcTree(0.1);
+      ColorOcTree *colorTree = new ColorOcTree(0.1);
       colorTree->readData(file);
-      if (colorTree->size() > 1 && file.good()){
+      if (colorTree->size() > 1 && file.good())
+      {
         OCTOMAP_WARNING_STR("Detected Binary ColorOcTree to convert. \nPlease check and update the new file header (resolution will likely be wrong).");
         tree = colorTree;
-      } else{
+      }
+      else
+      {
         delete colorTree;
         std::cerr << "Error reading from file " << inputFilename << std::endl;
         exit(-1);
       }
     }
-
-
   }
 
   // close filestream
   file.close();
 
-
-  if (outputFilename.length() > 3 && (outputFilename.compare(outputFilename.length()-3, 3, ".bt") == 0)){
+  if (outputFilename.length() > 3 && (outputFilename.compare(outputFilename.length() - 3, 3, ".bt") == 0))
+  {
     std::cerr << "Writing binary (BonsaiTree) file" << std::endl;
-    AbstractOccupancyOcTree* octree = dynamic_cast<AbstractOccupancyOcTree*>(tree);
-    if (octree){
-      if (!octree->writeBinary(outputFilename)){
+    AbstractOccupancyOcTree *octree = dynamic_cast<AbstractOccupancyOcTree *>(tree);
+    if (octree)
+    {
+      if (!octree->writeBinary(outputFilename))
+      {
         std::cerr << "Error writing to " << outputFilename << std::endl;
         exit(-2);
       }
-    } else {
+    }
+    else
+    {
       std::cerr << "Error: Writing to .bt is not supported for this tree type: " << tree->getTreeType() << std::endl;
       exit(-2);
     }
-  } else{
+  }
+  else
+  {
     std::cerr << "Writing general OcTree file" << std::endl;
-    if (!tree->write(outputFilename)){
+    if (!tree->write(outputFilename))
+    {
       std::cerr << "Error writing to " << outputFilename << std::endl;
       exit(-2);
     }
   }
 
-
-
-
-
   std::cout << "Finished writing to " << outputFilename << std::endl;
-  
+
   return 0;
 }

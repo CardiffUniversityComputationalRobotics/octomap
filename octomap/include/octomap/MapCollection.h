@@ -34,66 +34,65 @@
 #ifndef OCTOMAP_MAP_COLLECTION_H
 #define OCTOMAP_MAP_COLLECTION_H
 
-
 #include <vector>
 #include <octomap/MapNode.h>
 
-namespace octomap {
+namespace octomap
+{
 
-  
   template <class MAPNODE>
-  class MapCollection {
+  class MapCollection
+  {
   public:
     MapCollection();
     MapCollection(std::string filename);
     ~MapCollection();
 
-    void addNode( MAPNODE* node);
-    MAPNODE* addNode(const Pointcloud& cloud, point3d sensor_origin);
-    bool removeNode(const MAPNODE* n);
-    MAPNODE* queryNode(const point3d& p);
+    void addNode(MAPNODE *node);
+    MAPNODE *addNode(const Pointcloud &cloud, point3d sensor_origin);
+    bool removeNode(const MAPNODE *n);
+    MAPNODE *queryNode(const point3d &p);
 
-    bool isOccupied(const point3d& p) const;
+    bool isOccupied(const point3d &p) const;
     bool isOccupied(float x, float y, float z) const;
 
-    double getOccupancy(const point3d& p);
+    double getOccupancy(const point3d &p);
 
-    bool castRay(const point3d& origin, const point3d& direction, point3d& end,
-                 bool ignoreUnknownCells=false, double maxRange=-1.0) const;
+    bool castRay(const point3d &origin, const point3d &direction, point3d &end,
+                 bool ignoreUnknownCells = false, double maxRange = -1.0) const;
 
     bool writePointcloud(std::string filename);
     bool write(std::string filename);
 
     // TODO
-    void insertScan(const Pointcloud& scan, const octomap::point3d& sensor_origin,
-                    double maxrange=-1., bool pruning=true, bool lazy_eval = false);
+    void insertScan(const Pointcloud &scan, const octomap::point3d &sensor_origin,
+                    double maxrange = -1., bool pruning = true, bool lazy_eval = false);
     // TODO
-    MAPNODE* queryNode(std::string id);
+    MAPNODE *queryNode(std::string id);
 
-    typedef typename std::vector<MAPNODE*>::iterator iterator;
-    typedef typename std::vector<MAPNODE*>::const_iterator const_iterator;
+    typedef typename std::vector<MAPNODE *>::iterator iterator;
+    typedef typename std::vector<MAPNODE *>::const_iterator const_iterator;
     iterator begin() { return nodes.begin(); }
-    iterator end()   { return nodes.end(); }
+    iterator end() { return nodes.end(); }
     const_iterator begin() const { return nodes.begin(); }
     const_iterator end() const { return nodes.end(); }
     size_t size() const { return nodes.size(); }
-        
+
   protected:
     void clear();
     bool read(std::string filename);
 
     // TODO
-    std::vector<Pointcloud*> segment(const Pointcloud& scan) const;
+    std::vector<Pointcloud *> segment(const Pointcloud &scan) const;
     // TODO
-    MAPNODE* associate(const Pointcloud& scan);
+    MAPNODE *associate(const Pointcloud &scan);
 
-    static void splitPathAndFilename(std::string &filenamefullpath, std::string* path, std::string *filename);
+    static void splitPathAndFilename(std::string &filenamefullpath, std::string *path, std::string *filename);
     static std::string combinePathAndFilename(std::string path, std::string filename);
-    static bool readTagValue(std::string tag, std::ifstream &infile, std::string* value);
-    
-  protected:
+    static bool readTagValue(std::string tag, std::ifstream &infile, std::string *value);
 
-    std::vector<MAPNODE*> nodes;
+  protected:
+    std::vector<MAPNODE *> nodes;
   };
 
 } // end namespace

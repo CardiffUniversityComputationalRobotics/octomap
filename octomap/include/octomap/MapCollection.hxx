@@ -35,24 +35,29 @@
 #include <sstream>
 #include <fstream>
 
-namespace octomap {
-  
+namespace octomap
+{
+
   template <class MAPNODE>
-  MapCollection<MAPNODE>::MapCollection() {
+  MapCollection<MAPNODE>::MapCollection()
+  {
   }
 
   template <class MAPNODE>
-  MapCollection<MAPNODE>::MapCollection(std::string filename) {
+  MapCollection<MAPNODE>::MapCollection(std::string filename)
+  {
     this->read(filename);
   }
 
   template <class MAPNODE>
-  MapCollection<MAPNODE>::~MapCollection() {
+  MapCollection<MAPNODE>::~MapCollection()
+  {
     this->clear();
   }
 
   template <class MAPNODE>
-  void MapCollection<MAPNODE>::clear() {
+  void MapCollection<MAPNODE>::clear()
+  {
     // FIXME: memory leak, else we run into double frees in, e.g., the viewer...
 
     // for(typename std::vector<MAPNODE*>::iterator it= nodes.begin(); it != nodes.end(); ++it)
@@ -61,7 +66,8 @@ namespace octomap {
   }
 
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::read(std::string filenamefullpath) {
+  bool MapCollection<MAPNODE>::read(std::string filenamefullpath)
+  {
 
     std::string path;
     std::string filename;
@@ -69,23 +75,27 @@ namespace octomap {
 
     std::ifstream infile;
     infile.open(filenamefullpath.c_str(), std::ifstream::in);
-    if(!infile.is_open()){
-      OCTOMAP_ERROR_STR("Could not open "<< filenamefullpath << ". MapCollection not loaded.");
+    if (!infile.is_open())
+    {
+      OCTOMAP_ERROR_STR("Could not open " << filenamefullpath << ". MapCollection not loaded.");
       return false;
     }
 
     bool ok = true;
-    while(ok){
+    while (ok)
+    {
       std::string nodeID;
       ok = readTagValue("MAPNODEID", infile, &nodeID);
-      if(!ok){
-        //do not throw error, you could be at the end of the file
+      if (!ok)
+      {
+        // do not throw error, you could be at the end of the file
         break;
       }
 
       std::string mapNodeFilename;
       ok = readTagValue("MAPNODEFILENAME", infile, &mapNodeFilename);
-      if(!ok){
+      if (!ok)
+      {
         OCTOMAP_ERROR_STR("Could not read MAPNODEFILENAME.");
         break;
       }
@@ -93,27 +103,32 @@ namespace octomap {
       std::string poseStr;
       ok = readTagValue("MAPNODEPOSE", infile, &poseStr);
       std::istringstream poseStream(poseStr);
-      float x,y,z;
+      float x, y, z;
       poseStream >> x >> y >> z;
-      double roll,pitch,yaw;
+      double roll, pitch, yaw;
       poseStream >> roll >> pitch >> yaw;
       ok = ok && !poseStream.fail();
-      if(!ok){
+      if (!ok)
+      {
         OCTOMAP_ERROR_STR("Could not read MAPNODEPOSE.");
         break;
       }
       octomap::pose6d origin(x, y, z, roll, pitch, yaw);
 
-      MAPNODE* node = new MAPNODE(combinePathAndFilename(path,mapNodeFilename), origin);
+      MAPNODE *node = new MAPNODE(combinePathAndFilename(path, mapNodeFilename), origin);
       node->setId(nodeID);
 
-      if(!ok){
-        for(unsigned int i=0; i<nodes.size(); i++){
+      if (!ok)
+      {
+        for (unsigned int i = 0; i < nodes.size(); i++)
+        {
           delete nodes[i];
         }
         infile.close();
         return false;
-      } else {
+      }
+      else
+      {
         nodes.push_back(node);
       }
     }
@@ -122,77 +137,94 @@ namespace octomap {
   }
 
   template <class MAPNODE>
-  void MapCollection<MAPNODE>::addNode( MAPNODE* node){
+  void MapCollection<MAPNODE>::addNode(MAPNODE *node)
+  {
     nodes.push_back(node);
   }
 
   template <class MAPNODE>
-  MAPNODE* MapCollection<MAPNODE>::addNode(const Pointcloud& cloud, point3d sensor_origin) {
+  MAPNODE *MapCollection<MAPNODE>::addNode(const Pointcloud &cloud, point3d sensor_origin)
+  {
     // TODO...
     return 0;
   }
 
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::removeNode(const MAPNODE* n) {
+  bool MapCollection<MAPNODE>::removeNode(const MAPNODE *n)
+  {
     // TODO...
     return false;
   }
 
   template <class MAPNODE>
-  MAPNODE* MapCollection<MAPNODE>::queryNode(const point3d& p) {
-    for (const_iterator it = this->begin(); it != this->end(); ++it) {
+  MAPNODE *MapCollection<MAPNODE>::queryNode(const point3d &p)
+  {
+    for (const_iterator it = this->begin(); it != this->end(); ++it)
+    {
       point3d ptrans = (*it)->getOrigin().inv().transform(p);
-      typename MAPNODE::TreeType::NodeType* n = (*it)->getMap()->search(ptrans);
-      if (!n) continue;
-      if ((*it)->getMap()->isNodeOccupied(n)) return (*it);
+      typename MAPNODE::TreeType::NodeType *n = (*it)->getMap()->search(ptrans);
+      if (!n)
+        continue;
+      if ((*it)->getMap()->isNodeOccupied(n))
+        return (*it);
     }
     return 0;
   }
 
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::isOccupied(const point3d& p) const {
-    for (const_iterator it = this->begin(); it != this->end(); ++it) {
+  bool MapCollection<MAPNODE>::isOccupied(const point3d &p) const
+  {
+    for (const_iterator it = this->begin(); it != this->end(); ++it)
+    {
       point3d ptrans = (*it)->getOrigin().inv().transform(p);
-      typename MAPNODE::TreeType::NodeType* n = (*it)->getMap()->search(ptrans);
-      if (!n) continue;
-      if ((*it)->getMap()->isNodeOccupied(n)) return true;
+      typename MAPNODE::TreeType::NodeType *n = (*it)->getMap()->search(ptrans);
+      if (!n)
+        continue;
+      if ((*it)->getMap()->isNodeOccupied(n))
+        return true;
     }
     return false;
   }
 
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::isOccupied(float x, float y, float z) const {
-    point3d q(x,y,z);
+  bool MapCollection<MAPNODE>::isOccupied(float x, float y, float z) const
+  {
+    point3d q(x, y, z);
     return this->isOccupied(q);
   }
 
-
   template <class MAPNODE>
-  double MapCollection<MAPNODE>::getOccupancy(const point3d& p) {
+  double MapCollection<MAPNODE>::getOccupancy(const point3d &p)
+  {
     double max_occ_val = 0;
     bool is_unknown = true;
-    for (const_iterator it = this->begin(); it != this->end(); ++it) {
+    for (const_iterator it = this->begin(); it != this->end(); ++it)
+    {
       point3d ptrans = (*it)->getOrigin().inv().transform(p);
-      typename MAPNODE::TreeType::NodeType* n = (*it)->getMap()->search(ptrans);
-      if (n) {
+      typename MAPNODE::TreeType::NodeType *n = (*it)->getMap()->search(ptrans);
+      if (n)
+      {
         double occ = n->getOccupancy();
-        if (occ > max_occ_val) max_occ_val = occ;
+        if (occ > max_occ_val)
+          max_occ_val = occ;
         is_unknown = false;
       }
     }
-    if (is_unknown) return 0.5;
+    if (is_unknown)
+      return 0.5;
     return max_occ_val;
   }
 
-
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::castRay(const point3d& origin, const point3d& direction, point3d& end,
-                                       bool ignoreUnknownCells, double maxRange) const {
+  bool MapCollection<MAPNODE>::castRay(const point3d &origin, const point3d &direction, point3d &end,
+                                       bool ignoreUnknownCells, double maxRange) const
+  {
     bool hit_obstacle = false;
     double min_dist = 1e6;
     // SPEEDUP: use openMP to do raycasting in parallel
-    // SPEEDUP: use bounding boxes to determine submaps 
-    for (const_iterator it = this->begin(); it != this->end(); ++it) {
+    // SPEEDUP: use bounding boxes to determine submaps
+    for (const_iterator it = this->begin(); it != this->end(); ++it)
+    {
       point3d origin_trans = (*it)->getOrigin().inv().transform(origin);
       point3d direction_trans = (*it)->getOrigin().inv().rot().rotate(direction);
       printf("ray from %.2f,%.2f,%.2f in dir %.2f,%.2f,%.2f in node %s\n",
@@ -200,24 +232,27 @@ namespace octomap {
              direction_trans.x(), direction_trans.y(), direction_trans.z(),
              (*it)->getId().c_str());
       point3d temp_endpoint;
-      if ((*it)->getMap()->castRay(origin_trans, direction_trans, temp_endpoint, ignoreUnknownCells, maxRange)) {
+      if ((*it)->getMap()->castRay(origin_trans, direction_trans, temp_endpoint, ignoreUnknownCells, maxRange))
+      {
         printf("hit obstacle in node %s\n", (*it)->getId().c_str());
-        double current_dist =  origin_trans.distance(temp_endpoint);
-        if (current_dist < min_dist) {
+        double current_dist = origin_trans.distance(temp_endpoint);
+        if (current_dist < min_dist)
+        {
           min_dist = current_dist;
           end = (*it)->getOrigin().transform(temp_endpoint);
         }
         hit_obstacle = true;
       } // end if hit obst
-    } // end for
+    }   // end for
     return hit_obstacle;
   }
 
-  
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::writePointcloud(std::string filename) {
+  bool MapCollection<MAPNODE>::writePointcloud(std::string filename)
+  {
     Pointcloud pc;
-    for(typename std::vector<MAPNODE* >::iterator it = nodes.begin(); it != nodes.end(); ++it){
+    for (typename std::vector<MAPNODE *>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    {
       Pointcloud tmp = (*it)->generatePointcloud();
       pc.push_back(tmp);
     }
@@ -225,15 +260,16 @@ namespace octomap {
     return true;
   }
 
-
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::write(std::string filename) {
+  bool MapCollection<MAPNODE>::write(std::string filename)
+  {
     bool ok = true;
 
     std::ofstream outfile(filename.c_str());
     outfile << "#This file was generated by the write-method of MapCollection\n";
 
-    for(typename std::vector<MAPNODE* >::iterator it = nodes.begin(); it != nodes.end(); ++it){
+    for (typename std::vector<MAPNODE *>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+    {
       std::string id = (*it)->getId();
       pose6d origin = (*it)->getOrigin();
       std::string nodemapFilename = "nodemap_";
@@ -241,7 +277,7 @@ namespace octomap {
       nodemapFilename.append(".bt");
 
       outfile << "MAPNODEID " << id << "\n";
-      outfile << "MAPNODEFILENAME "<< nodemapFilename << "\n";
+      outfile << "MAPNODEFILENAME " << nodemapFilename << "\n";
       outfile << "MAPNODEPOSE " << origin.x() << " " << origin.y() << " " << origin.z() << " "
               << origin.roll() << " " << origin.pitch() << " " << origin.yaw() << std::endl;
       ok = ok && (*it)->writeMap(nodemapFilename);
@@ -252,55 +288,67 @@ namespace octomap {
 
   // TODO
   template <class MAPNODE>
-  void MapCollection<MAPNODE>::insertScan(const Pointcloud& scan, const octomap::point3d& sensor_origin,
-                                          double maxrange, bool pruning, bool lazy_eval) {
+  void MapCollection<MAPNODE>::insertScan(const Pointcloud &scan, const octomap::point3d &sensor_origin,
+                                          double maxrange, bool pruning, bool lazy_eval)
+  {
     fprintf(stderr, "ERROR: MapCollection::insertScan is not implemented yet.\n");
   }
 
   template <class MAPNODE>
-  MAPNODE* MapCollection<MAPNODE>::queryNode(std::string id) {
-    for (const_iterator it = this->begin(); it != this->end(); ++it) {
-      if ((*it)->getId() == id) return *(it);
+  MAPNODE *MapCollection<MAPNODE>::queryNode(std::string id)
+  {
+    for (const_iterator it = this->begin(); it != this->end(); ++it)
+    {
+      if ((*it)->getId() == id)
+        return *(it);
     }
     return 0;
   }
-        
+
   // TODO
   template <class MAPNODE>
-  std::vector<Pointcloud*> MapCollection<MAPNODE>::segment(const Pointcloud& scan) const {
-    std::vector<Pointcloud*> result;
+  std::vector<Pointcloud *> MapCollection<MAPNODE>::segment(const Pointcloud &scan) const
+  {
+    std::vector<Pointcloud *> result;
     fprintf(stderr, "ERROR: MapCollection::segment is not implemented yet.\n");
     return result;
   }
 
   // TODO
   template <class MAPNODE>
-  MAPNODE* MapCollection<MAPNODE>::associate(const Pointcloud& scan) {
+  MAPNODE *MapCollection<MAPNODE>::associate(const Pointcloud &scan)
+  {
     fprintf(stderr, "ERROR: MapCollection::associate is not implemented yet.\n");
     return 0;
   }
 
   template <class MAPNODE>
-  void MapCollection<MAPNODE>::splitPathAndFilename(std::string &filenamefullpath, 
-                                                    std::string* path, std::string *filename) {
+  void MapCollection<MAPNODE>::splitPathAndFilename(std::string &filenamefullpath,
+                                                    std::string *path, std::string *filename)
+  {
 #ifdef WIN32
     std::string::size_type lastSlash = filenamefullpath.find_last_of('\\');
 #else
     std::string::size_type lastSlash = filenamefullpath.find_last_of('/');
 #endif
-    if (lastSlash != std::string::npos){
-      *filename =  filenamefullpath.substr(lastSlash + 1);
+    if (lastSlash != std::string::npos)
+    {
+      *filename = filenamefullpath.substr(lastSlash + 1);
       *path = filenamefullpath.substr(0, lastSlash);
-    } else {
+    }
+    else
+    {
       *filename = filenamefullpath;
       *path = "";
     }
   }
 
   template <class MAPNODE>
-  std::string MapCollection<MAPNODE>::combinePathAndFilename(std::string path, std::string filename) {
+  std::string MapCollection<MAPNODE>::combinePathAndFilename(std::string path, std::string filename)
+  {
     std::string result = path;
-    if(path != ""){
+    if (path != "")
+    {
 #ifdef WIN32
       result.append("\\");
 #else
@@ -312,19 +360,23 @@ namespace octomap {
   }
 
   template <class MAPNODE>
-  bool MapCollection<MAPNODE>::readTagValue(std::string /*tag*/, std::ifstream& infile, std::string* value) {
+  bool MapCollection<MAPNODE>::readTagValue(std::string /*tag*/, std::ifstream &infile, std::string *value)
+  {
     std::string line;
-    while( getline(infile, line) ){
-      if(line.length() != 0 && line[0] != '#')
+    while (getline(infile, line))
+    {
+      if (line.length() != 0 && line[0] != '#')
         break;
     }
     *value = "";
     std::string::size_type firstSpace = line.find(' ');
-    if(firstSpace != std::string::npos && firstSpace != line.size()-1){
+    if (firstSpace != std::string::npos && firstSpace != line.size() - 1)
+    {
       *value = line.substr(firstSpace + 1);
       return true;
-    } 
-    else return false;
+    }
+    else
+      return false;
   }
 
 } // namespace

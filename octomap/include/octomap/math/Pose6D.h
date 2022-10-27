@@ -37,7 +37,8 @@
 #include "Vector3.h"
 #include "Quaternion.h"
 
-namespace octomath {
+namespace octomath
+{
 
   /*!
    * \brief This class represents a tree-dimensional pose of an object
@@ -46,9 +47,9 @@ namespace octomath {
    * translation vector representing the position of the object and
    * a Quaternion representing the attitude of the object
    */
-  class Pose6D {
+  class Pose6D
+  {
   public:
-
     Pose6D();
     ~Pose6D();
 
@@ -57,7 +58,7 @@ namespace octomath {
      *
      * Constructs a pose from given translation and rotation.
      */
-    Pose6D(const Vector3& trans, const Quaternion& rot);
+    Pose6D(const Vector3 &trans, const Quaternion &rot);
 
     /*!
      * \brief Constructor
@@ -68,47 +69,46 @@ namespace octomath {
      */
     Pose6D(float x, float y, float z, double roll, double pitch, double yaw);
 
-    Pose6D(const Pose6D& other);
-    Pose6D& operator= (const Pose6D& other);
+    Pose6D(const Pose6D &other);
+    Pose6D &operator=(const Pose6D &other);
 
-    bool operator==(const Pose6D& other) const;
-    bool operator!=(const Pose6D& other) const;
+    bool operator==(const Pose6D &other) const;
+    bool operator!=(const Pose6D &other) const;
 
     /*!
      * \brief Translational component
      *
      * @return the translational component of this pose
      */
-    inline Vector3& trans() { return translation; }
+    inline Vector3 &trans() { return translation; }
     /*!
      * \brief Rotational component
      *
      * @return the rotational component of this pose
      */
-    inline Quaternion& rot() { return rotation; }
+    inline Quaternion &rot() { return rotation; }
     /*!
      * \brief Translational component
      *
      * @return the translational component of this pose
      */
-    const Vector3& trans() const { return translation; }
+    const Vector3 &trans() const { return translation; }
     /*!
      * \brief Rotational component
      * @return the rotational component of this pose
      */
-    const Quaternion& rot() const { return rotation; }
+    const Quaternion &rot() const { return rotation; }
 
+    inline float &x() { return translation(0); }
+    inline float &y() { return translation(1); }
+    inline float &z() { return translation(2); }
+    inline const float &x() const { return translation(0); }
+    inline const float &y() const { return translation(1); }
+    inline const float &z() const { return translation(2); }
 
-    inline float& x() { return translation(0); }
-    inline float& y() { return translation(1); }
-    inline float& z() { return translation(2); }
-    inline const float& x() const { return translation(0); }
-    inline const float& y() const { return translation(1); }
-    inline const float& z() const { return translation(2); }
-
-    inline double roll()  const {return (rotation.toEuler())(0); }
-    inline double pitch() const {return (rotation.toEuler())(1); }
-    inline double yaw()   const {return (rotation.toEuler())(2); }
+    inline double roll() const { return (rotation.toEuler())(0); }
+    inline double pitch() const { return (rotation.toEuler())(1); }
+    inline double yaw() const { return (rotation.toEuler())(2); }
 
     /*!
      * \brief Transformation of a vector
@@ -118,7 +118,7 @@ namespace octomath {
      * @return the vector which is translated by the translation of
      * this and afterwards rotated by the rotation of this.
      */
-    Vector3 transform (const Vector3 &v) const;
+    Vector3 transform(const Vector3 &v) const;
 
     /*!
      * \brief Inversion
@@ -134,7 +134,7 @@ namespace octomath {
      * Inverts the coordinate transformation represented by this pose
      * @return a reference to this pose
      */
-    Pose6D& inv_IP();
+    Pose6D &inv_IP();
 
     /*!
      * \brief Concatenation
@@ -143,7 +143,7 @@ namespace octomath {
      * by this and p.
      * @return this * p (applies first this, then p)
      */
-    Pose6D operator* (const Pose6D &p) const;
+    Pose6D operator*(const Pose6D &p) const;
     /*!
      * \brief In place concatenation
      *
@@ -151,7 +151,7 @@ namespace octomath {
      * @return this which results from first moving by this and
      * afterwards by p
      */
-    const Pose6D& operator*= (const Pose6D &p);
+    const Pose6D &operator*=(const Pose6D &p);
 
     /*!
      * \brief Translational distance
@@ -173,25 +173,25 @@ namespace octomath {
      *
      * Output to stream in a format which can be parsed using read().
      */
-    std::ostream& write(std::ostream &s) const;
+    std::ostream &write(std::ostream &s) const;
     /*!
      * \brief Input operator
      *
      * Parsing from stream which was written by write().
      */
-    std::istream& read(std::istream &s);
+    std::istream &read(std::istream &s);
     /*!
      * \brief Binary output operator
      *
      * Output to stream in a binary format which can be parsed using readBinary().
      */
-    std::ostream& writeBinary(std::ostream &s) const;
+    std::ostream &writeBinary(std::ostream &s) const;
     /*!
      * \brief Binary input operator
      *
      * Parsing from binary stream which was written by writeBinary().
      */
-    std::istream& readBinary(std::istream &s);
+    std::istream &readBinary(std::istream &s);
 
   protected:
     Vector3 translation;
@@ -199,7 +199,7 @@ namespace octomath {
   };
 
   //! user friendly output in format (x y z, u x y z) which is (translation, rotation)
-  std::ostream& operator<<(std::ostream& s, const Pose6D& p);
+  std::ostream &operator<<(std::ostream &s, const Pose6D &p);
 
 }
 

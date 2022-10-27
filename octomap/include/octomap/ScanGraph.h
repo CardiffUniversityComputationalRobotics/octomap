@@ -34,88 +34,87 @@
 #ifndef OCTOMAP_SCANGRAPH_H
 #define OCTOMAP_SCANGRAPH_H
 
-
 #include <string>
 #include <math.h>
 
 #include "Pointcloud.h"
 #include "octomap_types.h"
 
-namespace octomap {
+namespace octomap
+{
 
   class ScanGraph;
-
 
   /**
    * A 3D scan as Pointcloud, performed from a Pose6D.
    */
-  class ScanNode {
+  class ScanNode
+  {
 
-   public:
-
-    ScanNode (Pointcloud* _scan, pose6d _pose, unsigned int _id)
-      : scan(_scan), pose(_pose), id(_id) {}
-    ScanNode ()
-      : scan(NULL) {}
+  public:
+    ScanNode(Pointcloud *_scan, pose6d _pose, unsigned int _id)
+        : scan(_scan), pose(_pose), id(_id) {}
+    ScanNode()
+        : scan(NULL) {}
 
     ~ScanNode();
 
-    bool operator == (const ScanNode& other) {
+    bool operator==(const ScanNode &other)
+    {
       return (id == other.id);
     }
 
-    std::ostream& writeBinary(std::ostream &s) const;
-    std::istream& readBinary(std::istream &s);
+    std::ostream &writeBinary(std::ostream &s) const;
+    std::istream &readBinary(std::istream &s);
 
-    std::ostream& writePoseASCII(std::ostream &s) const;
-    std::istream& readPoseASCII(std::istream &s);
+    std::ostream &writePoseASCII(std::ostream &s) const;
+    std::istream &readPoseASCII(std::istream &s);
 
-    Pointcloud* scan;
+    Pointcloud *scan;
     pose6d pose; ///< 6D pose from which the scan was performed
     unsigned int id;
-
   };
 
   /**
    * A connection between two \ref ScanNode "ScanNodes"
    */
-  class ScanEdge {
+  class ScanEdge
+  {
 
-   public:
-
-    ScanEdge(ScanNode* _first, ScanNode* _second, pose6d _constraint)
-      : first(_first), second(_second), constraint(_constraint), weight(1.0) { }
+  public:
+    ScanEdge(ScanNode *_first, ScanNode *_second, pose6d _constraint)
+        : first(_first), second(_second), constraint(_constraint), weight(1.0) {}
     ScanEdge() {}
 
-    bool operator == (const ScanEdge& other) {
-      return ( (*first == *(other.first) ) && ( *second == *(other.second) ) );
+    bool operator==(const ScanEdge &other)
+    {
+      return ((*first == *(other.first)) && (*second == *(other.second)));
     }
 
-    std::ostream& writeBinary(std::ostream &s) const;
+    std::ostream &writeBinary(std::ostream &s) const;
     // a graph has to be given to recover ScanNode pointers
-    std::istream& readBinary(std::istream &s, ScanGraph& graph);
+    std::istream &readBinary(std::istream &s, ScanGraph &graph);
 
-    std::ostream& writeASCII(std::ostream &s) const;
-    std::istream& readASCII(std::istream &s, ScanGraph& graph);
+    std::ostream &writeASCII(std::ostream &s) const;
+    std::istream &readASCII(std::istream &s, ScanGraph &graph);
 
-    ScanNode* first;
-    ScanNode* second;
+    ScanNode *first;
+    ScanNode *second;
 
     pose6d constraint;
     double weight;
   };
-
 
   /**
    * A ScanGraph is a collection of ScanNodes, connected by ScanEdges.
    * Each ScanNode contains a 3D scan performed from a pose.
    *
    */
-  class ScanGraph {
+  class ScanGraph
+  {
 
-   public:
-
-    ScanGraph() {};
+  public:
+    ScanGraph(){};
     ~ScanGraph();
 
     /// Clears all nodes and edges, and will delete the corresponding objects
@@ -129,7 +128,7 @@ namespace octomap {
      * @param pose 6D pose of the origin of the Pointcloud
      * @return Pointer to the new node
      */
-    ScanNode* addNode(Pointcloud* scan, pose6d pose);
+    ScanNode *addNode(Pointcloud *scan, pose6d pose);
 
     /**
      * Creates an edge between two ScanNodes.
@@ -140,12 +139,12 @@ namespace octomap {
      * @param constraint 6D transform between the two nodes
      * @return
      */
-    ScanEdge* addEdge(ScanNode* first, ScanNode* second, pose6d constraint);
+    ScanEdge *addEdge(ScanNode *first, ScanNode *second, pose6d constraint);
 
-    ScanEdge* addEdge(unsigned int first_id, unsigned int second_id);
+    ScanEdge *addEdge(unsigned int first_id, unsigned int second_id);
 
     /// will return NULL if node was not found
-    ScanNode* getNodeByID(unsigned int id);
+    ScanNode *getNodeByID(unsigned int id);
 
     /// \return true when an edge between first_id and second_id exists
     bool edgeExists(unsigned int first_id, unsigned int second_id);
@@ -154,9 +153,9 @@ namespace octomap {
     void connectPrevious();
 
     std::vector<unsigned int> getNeighborIDs(unsigned int id);
-    std::vector<ScanEdge*> getOutEdges(ScanNode* node);
+    std::vector<ScanEdge *> getOutEdges(ScanNode *node);
     // warning: constraints are reversed
-    std::vector<ScanEdge*> getInEdges(ScanNode* node);
+    std::vector<ScanEdge *> getInEdges(ScanNode *node);
 
     void exportDot(std::string filename);
 
@@ -169,36 +168,33 @@ namespace octomap {
     /// Cut Pointclouds to given BBX in local coords
     void cropEachScan(point3d lowerBound, point3d upperBound);
 
-
-    typedef std::vector<ScanNode*>::iterator iterator;
-    typedef std::vector<ScanNode*>::const_iterator const_iterator;
+    typedef std::vector<ScanNode *>::iterator iterator;
+    typedef std::vector<ScanNode *>::const_iterator const_iterator;
     iterator begin() { return nodes.begin(); }
-    iterator end()   { return nodes.end(); }
+    iterator end() { return nodes.end(); }
     const_iterator begin() const { return nodes.begin(); }
     const_iterator end() const { return nodes.end(); }
 
     size_t size() const { return nodes.size(); }
     size_t getNumPoints(unsigned int max_id = -1) const;
 
-    typedef std::vector<ScanEdge*>::iterator edge_iterator;
-    typedef std::vector<ScanEdge*>::const_iterator const_edge_iterator;
+    typedef std::vector<ScanEdge *>::iterator edge_iterator;
+    typedef std::vector<ScanEdge *>::const_iterator const_edge_iterator;
     edge_iterator edges_begin() { return edges.begin(); }
-    edge_iterator edges_end()  { return edges.end(); }
+    edge_iterator edges_end() { return edges.end(); }
     const_edge_iterator edges_begin() const { return edges.begin(); }
-    const_edge_iterator edges_end() const  { return edges.end(); }
+    const_edge_iterator edges_end() const { return edges.end(); }
 
+    std::ostream &writeBinary(std::ostream &s) const;
+    std::istream &readBinary(std::ifstream &s);
+    bool writeBinary(const std::string &filename) const;
+    bool readBinary(const std::string &filename);
 
-    std::ostream& writeBinary(std::ostream &s) const;
-    std::istream& readBinary(std::ifstream &s);
-    bool writeBinary(const std::string& filename) const;
-    bool readBinary(const std::string& filename);
+    std::ostream &writeEdgesASCII(std::ostream &s) const;
+    std::istream &readEdgesASCII(std::istream &s);
 
-
-    std::ostream& writeEdgesASCII(std::ostream &s) const;
-    std::istream& readEdgesASCII(std::istream &s);
-
-    std::ostream& writeNodePosesASCII(std::ostream &s) const;
-    std::istream& readNodePosesASCII(std::istream &s);
+    std::ostream &writeNodePosesASCII(std::ostream &s) const;
+    std::istream &readNodePosesASCII(std::istream &s);
 
     /**
      * Reads in a ScanGraph from a "plain" ASCII file of the form
@@ -216,16 +212,14 @@ namespace octomap {
      * @param s input stream to read from
      * @return read stream
      */
-    std::istream& readPlainASCII(std::istream& s);
-    void readPlainASCII(const std::string& filename);
+    std::istream &readPlainASCII(std::istream &s);
+    void readPlainASCII(const std::string &filename);
 
-   protected:
-
-    std::vector<ScanNode*> nodes;
-    std::vector<ScanEdge*> edges;
+  protected:
+    std::vector<ScanNode *> nodes;
+    std::vector<ScanEdge *> edges;
   };
 
 }
-
 
 #endif

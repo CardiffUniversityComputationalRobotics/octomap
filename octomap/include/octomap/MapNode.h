@@ -34,27 +34,28 @@
 #ifndef OCTOMAP_MAP_NODE_H
 #define OCTOMAP_MAP_NODE_H
 
-
 #include <string>
 #include <octomap/OcTree.h>
 
-namespace octomap {
+namespace octomap
+{
 
   template <class TREETYPE>
-    class MapNode {
-    
+  class MapNode
+  {
+
   public:
     MapNode();
-    MapNode(TREETYPE* node_map, pose6d origin);
+    MapNode(TREETYPE *node_map, pose6d origin);
     MapNode(std::string filename, pose6d origin);
-    MapNode(const Pointcloud& cloud, pose6d origin);
+    MapNode(const Pointcloud &cloud, pose6d origin);
     ~MapNode();
 
     typedef TREETYPE TreeType;
 
-    TREETYPE* getMap() { return  node_map; }
-    
-    void updateMap(const Pointcloud& cloud, point3d sensor_origin);
+    TREETYPE *getMap() { return node_map; }
+
+    void updateMap(const Pointcloud &cloud, point3d sensor_origin);
 
     inline std::string getId() { return id; }
     inline void setId(std::string newid) { id = newid; }
@@ -66,13 +67,12 @@ namespace octomap {
     bool writeMap(std::string filename);
 
   protected:
-    TREETYPE*    node_map;  // occupancy grid map
-    pose6d       origin;    // origin and orientation relative to parent
-    std::string  id;
+    TREETYPE *node_map; // occupancy grid map
+    pose6d origin;      // origin and orientation relative to parent
+    std::string id;
 
     void clear();
     bool readMap(std::string filename);
-
   };
 
 } // end namespace

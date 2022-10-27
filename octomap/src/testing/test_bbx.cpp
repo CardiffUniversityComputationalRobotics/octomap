@@ -4,7 +4,8 @@
 
 using namespace octomap;
 
-int main(int /*argc*/, char** /*argv*/) {
+int main(int /*argc*/, char ** /*argv*/)
+{
   const float resolution = 0.2f;
   OcTree tree(resolution);
 

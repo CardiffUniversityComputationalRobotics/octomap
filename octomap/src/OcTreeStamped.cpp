@@ -33,37 +33,44 @@
 
 #include "octomap/OcTreeStamped.h"
 
-namespace octomap {
+namespace octomap
+{
 
   OcTreeStamped::OcTreeStamped(double in_resolution)
-   : OccupancyOcTreeBase<OcTreeNodeStamped>(in_resolution) {
+      : OccupancyOcTreeBase<OcTreeNodeStamped>(in_resolution)
+  {
     ocTreeStampedMemberInit.ensureLinking();
   }
 
-  unsigned int OcTreeStamped::getLastUpdateTime() {
+  unsigned int OcTreeStamped::getLastUpdateTime()
+  {
     // this value is updated whenever inner nodes are
     // updated using updateOccupancyChildren()
     return root->getTimestamp();
   }
 
-  void OcTreeStamped::degradeOutdatedNodes(unsigned int time_thres) {
-    unsigned int query_time = (unsigned int) time(NULL);
+  void OcTreeStamped::degradeOutdatedNodes(unsigned int time_thres)
+  {
+    unsigned int query_time = (unsigned int)time(NULL);
 
-    for(leaf_iterator it = this->begin_leafs(), end=this->end_leafs();
-        it!= end; ++it) {
-      if ( this->isNodeOccupied(*it)
-           && ((query_time - it->getTimestamp()) > time_thres) ) {
+    for (leaf_iterator it = this->begin_leafs(), end = this->end_leafs();
+         it != end; ++it)
+    {
+      if (this->isNodeOccupied(*it) && ((query_time - it->getTimestamp()) > time_thres))
+      {
         integrateMissNoTime(&*it);
       }
     }
   }
 
-  void OcTreeStamped::updateNodeLogOdds(OcTreeNodeStamped* node, const float& update) const {
+  void OcTreeStamped::updateNodeLogOdds(OcTreeNodeStamped *node, const float &update) const
+  {
     OccupancyOcTreeBase<OcTreeNodeStamped>::updateNodeLogOdds(node, update);
     node->updateTimestamp();
   }
 
-  void OcTreeStamped::integrateMissNoTime(OcTreeNodeStamped* node) const{
+  void OcTreeStamped::integrateMissNoTime(OcTreeNodeStamped *node) const
+  {
     OccupancyOcTreeBase<OcTreeNodeStamped>::updateNodeLogOdds(node, prob_miss_log);
   }
 
