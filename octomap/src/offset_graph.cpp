@@ -40,25 +40,28 @@ using namespace std;
 using namespace octomap;
 using namespace octomath;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 
-  if (argc != 4) {
+  if (argc != 4)
+  {
     printf("usage: in.graph offset out.graph\n");
     exit(0);
   }
 
-  ScanGraph* graph = new ScanGraph();
+  ScanGraph *graph = new ScanGraph();
   graph->readBinary(argv[1]);
 
   double offset = atof(argv[2]);
-  Pose6D trans(0,0,-offset,0,0,0);
+  Pose6D trans(0, 0, -offset, 0, 0, 0);
 
-  for (ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
+  for (ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++)
+  {
     (*scan_it)->scan->transform(trans);
     (*scan_it)->pose *= trans.inv();
   }
 
- graph->writeBinary(argv[3]);
-  
- return 0;
+  graph->writeBinary(argv[3]);
+
+  return 0;
 }

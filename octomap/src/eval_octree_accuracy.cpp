@@ -42,22 +42,23 @@
 using namespace std;
 using namespace octomap;
 
-void printUsage(char* self){
+void printUsage(char *self)
+{
   std::cerr << "USAGE: " << self << " <InputFile.graph>\n";
   std::cerr << "This tool is part of OctoMap and evaluates the statistical accuracy\n"
                "of an octree map from scan graph data (point clouds with poses).\n";
 
   std::cerr << "OPTIONS:\n"
-            "  -res <resolution> (default: 0.1 m)\n"
-            "  -m <maxrange> (optional) \n"
-            "  -n <max scan no.> (optional) \n"
-  "\n";
+               "  -res <resolution> (default: 0.1 m)\n"
+               "  -m <maxrange> (optional) \n"
+               "  -n <max scan no.> (optional) \n"
+               "\n";
 
   exit(0);
 }
 
-
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   // default values:
   double res = 0.1;
 
@@ -71,50 +72,59 @@ int main(int argc, char** argv) {
   int skip_scan_eval = 5;
 
   int arg = 1;
-  while (++arg < argc) {
-    if (! strcmp(argv[arg], "-i"))
+  while (++arg < argc)
+  {
+    if (!strcmp(argv[arg], "-i"))
       graphFilename = std::string(argv[++arg]);
-    else if (! strcmp(argv[arg], "-res"))
+    else if (!strcmp(argv[arg], "-res"))
       res = atof(argv[++arg]);
-    else if (! strcmp(argv[arg], "-m"))
+    else if (!strcmp(argv[arg], "-m"))
       maxrange = atof(argv[++arg]);
-    else if (! strcmp(argv[arg], "-n"))
+    else if (!strcmp(argv[arg], "-n"))
       max_scan_no = atoi(argv[++arg]);
-    else {
+    else
+    {
       printUsage(argv[0]);
     }
   }
 
   cout << "\nReading Graph file\n===========================\n";
-  ScanGraph* graph = new ScanGraph();
+  ScanGraph *graph = new ScanGraph();
   if (!graph->readBinary(graphFilename))
     exit(2);
-  
+
   size_t num_points_in_graph = 0;
-  if (max_scan_no > 0) {
-    num_points_in_graph = graph->getNumPoints(max_scan_no-1);
+  if (max_scan_no > 0)
+  {
+    num_points_in_graph = graph->getNumPoints(max_scan_no - 1);
     cout << "\n Data points in graph up to scan " << max_scan_no << ": " << num_points_in_graph << endl;
   }
-  else {
+  else
+  {
     num_points_in_graph = graph->getNumPoints();
     cout << "\n Data points in graph: " << num_points_in_graph << endl;
   }
 
   cout << "\nCreating tree\n===========================\n";
-  OcTree* tree = new OcTree(res);
+  OcTree *tree = new OcTree(res);
 
   size_t numScans = graph->size();
   unsigned int currentScan = 1;
-  for (ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
+  for (ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++)
+  {
 
-    if (currentScan % skip_scan_eval != 0){
-      if (max_scan_no > 0) cout << "("<<currentScan << "/" << max_scan_no << ") " << flush;
-      else cout << "("<<currentScan << "/" << numScans << ") " << flush;
+    if (currentScan % skip_scan_eval != 0)
+    {
+      if (max_scan_no > 0)
+        cout << "(" << currentScan << "/" << max_scan_no << ") " << flush;
+      else
+        cout << "(" << currentScan << "/" << numScans << ") " << flush;
       tree->insertPointCloud(**scan_it, maxrange);
-    } else
+    }
+    else
       cout << "(SKIP) " << flush;
 
-    if ((max_scan_no > 0) && (currentScan == (unsigned int) max_scan_no))
+    if ((max_scan_no > 0) && (currentScan == (unsigned int)max_scan_no))
       break;
 
     currentScan++;
@@ -122,7 +132,6 @@ int main(int argc, char** argv) {
 
   tree->expand();
 
-  
   cout << "\nEvaluating scans\n===========================\n";
   currentScan = 1;
   size_t num_points = 0;
@@ -130,19 +139,21 @@ int main(int argc, char** argv) {
   size_t num_voxels_wrong = 0;
   size_t num_voxels_unknown = 0;
 
+  for (ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++)
+  {
 
-  for (ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
-
-    if (currentScan % skip_scan_eval == 0){
-      if (max_scan_no > 0) cout << "("<<currentScan << "/" << max_scan_no << ") " << flush;
-      else cout << "("<<currentScan << "/" << numScans << ") " << flush;
-
+    if (currentScan % skip_scan_eval == 0)
+    {
+      if (max_scan_no > 0)
+        cout << "(" << currentScan << "/" << max_scan_no << ") " << flush;
+      else
+        cout << "(" << currentScan << "/" << numScans << ") " << flush;
 
       pose6d frame_origin = (*scan_it)->pose;
       point3d sensor_origin = frame_origin.inv().transform((*scan_it)->pose.trans());
 
       // transform pointcloud:
-      Pointcloud scan (*(*scan_it)->scan);
+      Pointcloud scan(*(*scan_it)->scan);
       scan.transform(frame_origin);
       point3d origin = frame_origin.transform(sensor_origin);
 
@@ -152,45 +163,46 @@ int main(int argc, char** argv) {
       num_points += scan.size();
 
       // count free cells
-      for (KeySet::iterator it = free_cells.begin(); it != free_cells.end(); ++it) {
-        OcTreeNode* n = tree->search(*it);
-        if (n){
+      for (KeySet::iterator it = free_cells.begin(); it != free_cells.end(); ++it)
+      {
+        OcTreeNode *n = tree->search(*it);
+        if (n)
+        {
           if (tree->isNodeOccupied(n))
             num_voxels_wrong++;
           else
             num_voxels_correct++;
-        } else
+        }
+        else
           num_voxels_unknown++;
       } // count occupied cells
-      for (KeySet::iterator it = occupied_cells.begin(); it != occupied_cells.end(); ++it) {
-        OcTreeNode* n = tree->search(*it);
-        if (n){
+      for (KeySet::iterator it = occupied_cells.begin(); it != occupied_cells.end(); ++it)
+      {
+        OcTreeNode *n = tree->search(*it);
+        if (n)
+        {
           if (tree->isNodeOccupied(n))
             num_voxels_correct++;
           else
             num_voxels_wrong++;
-        } else
+        }
+        else
           num_voxels_unknown++;
       }
-
-
     }
 
-    if ((max_scan_no > 0) && (currentScan == (unsigned int) max_scan_no))
+    if ((max_scan_no > 0) && (currentScan == (unsigned int)max_scan_no))
       break;
 
     currentScan++;
-
-
   }
 
-  cout << "\nFinished evaluating " << num_points <<"/"<< num_points_in_graph << " points.\n"
-      <<"Voxels correct: "<<num_voxels_correct<<" #wrong: " <<num_voxels_wrong << " #unknown: " <<num_voxels_unknown
-      <<". % correct: "<< num_voxels_correct/double(num_voxels_correct+num_voxels_wrong)<<"\n\n";
-
+  cout << "\nFinished evaluating " << num_points << "/" << num_points_in_graph << " points.\n"
+       << "Voxels correct: " << num_voxels_correct << " #wrong: " << num_voxels_wrong << " #unknown: " << num_voxels_unknown
+       << ". % correct: " << num_voxels_correct / double(num_voxels_correct + num_voxels_wrong) << "\n\n";
 
   delete graph;
   delete tree;
-  
+
   return 0;
 }

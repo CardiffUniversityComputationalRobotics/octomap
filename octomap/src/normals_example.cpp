@@ -40,29 +40,33 @@
 using namespace std;
 using namespace octomap;
 
-
-void print_query_info(point3d query, OcTreeNode* node) {
-  if (node != NULL) {
+void print_query_info(point3d query, OcTreeNode *node)
+{
+  if (node != NULL)
+  {
     cout << "occupancy probability at " << query << ":\t " << node->getOccupancy() << endl;
   }
-  else 
-    cout << "occupancy probability at " << query << ":\t is unknown" << endl;    
+  else
+    cout << "occupancy probability at " << query << ":\t is unknown" << endl;
 }
 
-int main(int /*argc*/, char** /*argv*/) {
+int main(int /*argc*/, char ** /*argv*/)
+{
 
   cout << endl;
   cout << "generating example map" << endl;
 
-  OcTree tree (0.1);  // create empty tree with resolution 0.1
-
+  OcTree tree(0.1); // create empty tree with resolution 0.1
 
   // insert some measurements of occupied cells
 
-  for (int x=-20; x<20; x++) {
-    for (int y=-20; y<20; y++) {
-      for (int z=-20; z<20; z++) {
-        point3d endpoint ((float) x*0.05f, (float) y*0.05f, (float) z*0.05f);
+  for (int x = -20; x < 20; x++)
+  {
+    for (int y = -20; y < 20; y++)
+    {
+      for (int z = -20; z < 20; z++)
+      {
+        point3d endpoint((float)x * 0.05f, (float)y * 0.05f, (float)z * 0.05f);
         tree.updateNode(endpoint, true); // integrate 'occupied' measurement
       }
     }
@@ -70,43 +74,52 @@ int main(int /*argc*/, char** /*argv*/) {
 
   // insert some measurements of free cells
 
-  for (int x=-30; x<30; x++) {
-    for (int y=-30; y<30; y++) {
-      for (int z=-30; z<30; z++) {
-        point3d endpoint ((float) x*0.02f-1.0f, (float) y*0.02f-1.0f, (float) z*0.02f-1.0f);
-        tree.updateNode(endpoint, false);  // integrate 'free' measurement
+  for (int x = -30; x < 30; x++)
+  {
+    for (int y = -30; y < 30; y++)
+    {
+      for (int z = -30; z < 30; z++)
+      {
+        point3d endpoint((float)x * 0.02f - 1.0f, (float)y * 0.02f - 1.0f, (float)z * 0.02f - 1.0f);
+        tree.updateNode(endpoint, false); // integrate 'free' measurement
       }
     }
   }
 
   cout << endl;
   cout << "performing some queries around the desired voxel:" << endl;
-  
-  point3d query;
-  OcTreeNode* result = NULL;
 
-  for(float z = -0.6f; z < -0.21f; z += 0.1f){
-    for(float y = -0.6f; y < -0.21f; y += 0.1f){
-      for(float x = -0.6f; x < -0.21f; x += 0.1f){
+  point3d query;
+  OcTreeNode *result = NULL;
+
+  for (float z = -0.6f; z < -0.21f; z += 0.1f)
+  {
+    for (float y = -0.6f; y < -0.21f; y += 0.1f)
+    {
+      for (float x = -0.6f; x < -0.21f; x += 0.1f)
+      {
         query = point3d(x, y, z);
         result = tree.search(query);
         print_query_info(query, result);
       }
     }
   }
-  
+
   query = point3d(-0.5f, -0.4f, -0.4f);
   result = tree.search(query);
-	
+
   vector<point3d> normals;
-  if (tree.getNormals(query, normals)){
-  
+  if (tree.getNormals(query, normals))
+  {
+
     cout << endl;
     string s_norm = (normals.size() > 1) ? " normals " : " normal ";
     cout << "MC algorithm gives " << normals.size() << s_norm << "in voxel at " << query << endl;
-    for(unsigned i = 0; i < normals.size(); ++i)
+    for (unsigned i = 0; i < normals.size(); ++i)
       cout << "\t" << normals[i].x() << "; " << normals[i].y() << "; " << normals[i].z() << endl;
-  } else{
+  }
+  else
+  {
     cout << "query point unknown (no normals)\n";
   }
 }

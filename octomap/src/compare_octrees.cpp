@@ -40,7 +40,7 @@
 #include <cmath>
 
 #ifdef _MSC_VER // fix missing isnan for VC++
-#define isnan(x) _isnan(x)  
+#define isnan(x) _isnan(x)
 #endif
 
 // on MacOS, isnan is in std (also C++11)
@@ -48,7 +48,8 @@ using namespace std;
 
 using namespace octomap;
 
-void printUsage(char* self){
+void printUsage(char *self)
+{
   std::cerr << "\nUSAGE: " << self << " tree1.ot tree2.ot\n\n";
 
   std::cerr << "Compare two octrees for accuracy / compression.\n\n";
@@ -56,9 +57,11 @@ void printUsage(char* self){
   exit(0);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 
-  if (argc != 3 || (argc > 1 && strcmp(argv[1], "-h") == 0)){
+  if (argc != 3 || (argc > 1 && strcmp(argv[1], "-h") == 0))
+  {
     printUsage(argv[0]);
   }
 
@@ -67,23 +70,24 @@ int main(int argc, char** argv) {
 
   cout << "\nReading octree files...\n";
 
-  OcTree* tree1 = dynamic_cast<OcTree*>(OcTree::read(filename1));
-  OcTree* tree2 = dynamic_cast<OcTree*>(OcTree::read(filename2));
+  OcTree *tree1 = dynamic_cast<OcTree *>(OcTree::read(filename1));
+  OcTree *tree2 = dynamic_cast<OcTree *>(OcTree::read(filename2));
 
-  if (fabs(tree1->getResolution()-tree2->getResolution()) > 1e-6){
+  if (fabs(tree1->getResolution() - tree2->getResolution()) > 1e-6)
+  {
     OCTOMAP_ERROR("Error: Tree resolutions don't match!");
     exit(-1);
   }
-
 
   cout << "Expanding octrees... \n";
   // expand both to full resolution:
   tree1->expand();
   tree2->expand();
 
-  if (tree1->getNumLeafNodes() != tree2->getNumLeafNodes()){
-      OCTOMAP_ERROR_STR("Octrees have different size: " << tree1->getNumLeafNodes() << "!=" <<tree2->getNumLeafNodes() << endl);
-      exit(-1);
+  if (tree1->getNumLeafNodes() != tree2->getNumLeafNodes())
+  {
+    OCTOMAP_ERROR_STR("Octrees have different size: " << tree1->getNumLeafNodes() << "!=" << tree2->getNumLeafNodes() << endl);
+    exit(-1);
   }
 
   cout << "Expanded num. leafs: " << tree1->getNumLeafNodes() << endl;
@@ -93,9 +97,7 @@ int main(int argc, char** argv) {
   tree1->getMetricSize(x1, y1, z1);
   tree2->getMetricSize(x2, y2, z2);
 
-  if ((fabs(x1-x2) > 1e-6)
-      || (fabs(y1-y2) > 1e-6)
-      || (fabs(z1-z2) > 1e-6))
+  if ((fabs(x1 - x2) > 1e-6) || (fabs(y1 - y2) > 1e-6) || (fabs(z1 - z2) > 1e-6))
   {
     OCTOMAP_WARNING("Trees span over different volumes, results may be wrong\n");
     exit(1);
@@ -104,12 +106,16 @@ int main(int argc, char** argv) {
   double kld_sum = 0.0;
   cout << "Comparing trees... \n";
   for (OcTree::leaf_iterator it = tree1->begin_leafs(),
-      end = tree1->end_leafs();  it != end; ++it)
+                             end = tree1->end_leafs();
+       it != end; ++it)
   {
-    OcTreeNode* n = tree2->search(it.getKey());
-    if (!n){
+    OcTreeNode *n = tree2->search(it.getKey());
+    if (!n)
+    {
       OCTOMAP_ERROR("Could not find coordinate of 1st octree in 2nd octree\n");
-    } else{
+    }
+    else
+    {
       // check occupancy prob:
       double p1 = it->getOccupancy();
       double p2 = n->getOccupancy();
@@ -118,45 +124,43 @@ int main(int argc, char** argv) {
       if (p2 < 0.0 || p2 > 1.0)
         OCTOMAP_ERROR("p2 wrong: %f", p2);
 
-//      if (p1 > 0.1 || p2 > 0.1)
+      //      if (p1 > 0.1 || p2 > 0.1)
       if (p1 > 0.001 && p2 < 0.001)
         OCTOMAP_WARNING("p2 near 0, p1 > 0 => inf?");
       if (p1 < 0.999 && p2 > 0.999)
-         OCTOMAP_WARNING("p2 near 1, p1 < 1 => inf?");
+        OCTOMAP_WARNING("p2 near 1, p1 < 1 => inf?");
 
       double kld = 0;
       if (p1 < 0.0001)
-        kld =log((1-p1)/(1-p2))*(1-p1);
+        kld = log((1 - p1) / (1 - p2)) * (1 - p1);
       else if (p1 > 0.9999)
-        kld =log(p1/p2)*p1;
+        kld = log(p1 / p2) * p1;
       else
-        kld +=log(p1/p2)*p1 + log((1-p1)/(1-p2))*(1-p1);
+        kld += log(p1 / p2) * p1 + log((1 - p1) / (1 - p2)) * (1 - p1);
 
 #if __cplusplus >= 201103L
-      if (std::isnan(kld)){
+      if (std::isnan(kld))
+      {
 #else
-      if (isnan(kld)){
+      if (isnan(kld))
+      {
 #endif
         OCTOMAP_ERROR("KLD is nan! KLD(%f,%f)=%f; sum = %f", p1, p2, kld, kld_sum);
         exit(-1);
       }
 
-      kld_sum+=kld;
+      kld_sum += kld;
 
-      //if (p1 <)
-//      if (fabs(p1-p2) > 1e-6)
-//        cout << "diff: " << p1-p2 << endl;
+      // if (p1 <)
+      //      if (fabs(p1-p2) > 1e-6)
+      //        cout << "diff: " << p1-p2 << endl;
     }
-
-
   }
 
   cout << "KLD: " << kld_sum << endl;
 
-
-
   delete tree1;
   delete tree2;
-  
+
   return 0;
 }

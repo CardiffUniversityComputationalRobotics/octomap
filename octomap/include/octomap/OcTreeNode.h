@@ -39,33 +39,34 @@
 #include "OcTreeDataNode.h"
 #include <limits>
 
-namespace octomap {
+namespace octomap
+{
 
   /**
    * Nodes to be used in OcTree. They represent 3d occupancy grid cells.
    * "value" stores their log-odds occupancy.
    *
-   * Note: If you derive a class (directly or indirectly) from OcTreeNode or 
+   * Note: If you derive a class (directly or indirectly) from OcTreeNode or
    * OcTreeDataNode, you have to implement (at least) the following functions:
    * createChild(), getChild(), getChild() const, expandNode() to avoid slicing
    * errors and memory-related bugs.
    * See ColorOcTreeNode in ColorOcTree.h for an example.
    *
    */
-  class OcTreeNode : public OcTreeDataNode<float> {
+  class OcTreeNode : public OcTreeDataNode<float>
+  {
 
   public:
     OcTreeNode();
     ~OcTreeNode();
 
-    
     // -- node occupancy  ----------------------------
 
     /// \return occupancy probability of node
     inline double getOccupancy() const { return probability(value); }
 
     /// \return log odds representation of occupancy probability of node
-    inline float getLogOdds() const{ return value; }
+    inline float getLogOdds() const { return value; }
     /// sets log odds occupancy of node
     inline void setLogOdds(float l) { value = l; }
 
@@ -80,13 +81,13 @@ namespace octomap {
     float getMaxChildLogOdds() const;
 
     /// update this node's occupancy according to its children's maximum occupancy
-    inline void updateOccupancyChildren() {
-      this->setLogOdds(this->getMaxChildLogOdds());  // conservative
+    inline void updateOccupancyChildren()
+    {
+      this->setLogOdds(this->getMaxChildLogOdds()); // conservative
     }
 
     /// adds p to the node's logOdds value (with no boundary / threshold checking!)
-    void addValue(const float& p);
-    
+    void addValue(const float &p);
 
   protected:
     // "value" stores log odds occupancy probability

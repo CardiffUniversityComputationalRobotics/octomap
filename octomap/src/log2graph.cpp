@@ -38,41 +38,45 @@
 using namespace std;
 using namespace octomap;
 
-void printUsage(char* self){
+void printUsage(char *self)
+{
   std::cerr << "\nUSAGE: " << self << " InputFile.log OutputFile.graph\n\n";
 
   std::cerr << "This tool converts a plain text log file into a binary scangraph file" << std::endl;
   std::cerr << "which can be used in Octomap.\n\n";
   std::cerr << "The log file needs to be in the format of:\n"
-      << "NODE x y z roll pitch yaw\n"
-      << "x y z\nx y z\n...\n"
-      << "NODE x y z roll pitch yaw\n"
-      << "x y z\n...\n\n"
-      << "Lines starting with '#' or empty lines are ignored.\n\n";
+            << "NODE x y z roll pitch yaw\n"
+            << "x y z\nx y z\n...\n"
+            << "NODE x y z roll pitch yaw\n"
+            << "x y z\n...\n\n"
+            << "Lines starting with '#' or empty lines are ignored.\n\n";
 
   exit(0);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   // default values:
   string logFilename = "";
   string graphFilename = "";
 
-
-  if (argc != 3){
+  if (argc != 3)
+  {
     printUsage(argv[0]);
-  } else{
+  }
+  else
+  {
     logFilename = std::string(argv[1]);
     graphFilename = std::string(argv[2]);
   }
 
   cout << "\nReading Log file\n===========================\n";
-  ScanGraph* graph = new ScanGraph();
+  ScanGraph *graph = new ScanGraph();
   graph->readPlainASCII(logFilename);
 
   cout << "\nWriting binary graph file\n===========================\n";
 
   graph->writeBinary(graphFilename);
-  
+
   return 0;
 }

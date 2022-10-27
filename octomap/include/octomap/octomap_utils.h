@@ -36,20 +36,20 @@
 
 #include <math.h>
 
-namespace octomap{
+namespace octomap
+{
 
   /// compute log-odds from probability:
-  inline float logodds(double probability){
-    return (float) log(probability/(1-probability));
+  inline float logodds(double probability)
+  {
+    return (float)log(probability / (1 - probability));
   }
 
   /// compute probability from logodds:
-  inline double probability(double logodds){
-    return 1. - ( 1. / (1. + exp(logodds)));
-
+  inline double probability(double logodds)
+  {
+    return 1. - (1. / (1. + exp(logodds)));
   }
 }
-
-
 
 #endif /* OCTOMAP_UTILS_H_ */

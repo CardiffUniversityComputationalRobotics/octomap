@@ -42,15 +42,12 @@
 #define M_PI_2 1.570796326794896619
 #endif
 
-
 #ifndef DEG2RAD
-#define DEG2RAD(x) ((x) * 0.01745329251994329575)
+#define DEG2RAD(x) ((x)*0.01745329251994329575)
 #endif
 
 #ifndef RAD2DEG
-#define RAD2DEG(x) ((x) * 57.29577951308232087721)
+#define RAD2DEG(x) ((x)*57.29577951308232087721)
 #endif
-
-
 
 #endif

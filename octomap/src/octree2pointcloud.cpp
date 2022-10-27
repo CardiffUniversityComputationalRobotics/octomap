@@ -42,51 +42,54 @@
 using namespace std;
 using namespace octomap;
 
-void printUsage(char* self){
+void printUsage(char *self)
+{
   cerr << "USAGE: " << self << " <InputFile.bt> <OutputFile.pcd>\n";
   cerr << "This tool creates a point cloud of the occupied cells\n";
   exit(0);
 }
 
-
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   if (argc != 3)
     printUsage(argv[0]);
 
   string inputFilename = argv[1];
   string outputFilename = argv[2];
 
-  OcTree* tree = new OcTree(0.1);
-  if (!tree->readBinary(inputFilename)){
+  OcTree *tree = new OcTree(0.1);
+  if (!tree->readBinary(inputFilename))
+  {
     OCTOMAP_ERROR("Could not open file, exiting.\n");
     exit(1);
   }
 
   unsigned int maxDepth = tree->getTreeDepth();
   cout << "tree depth is " << maxDepth << endl;
-  
+
   // expand collapsed occupied nodes until all occupied leaves are at maximum depth
-  vector<OcTreeNode*> collapsed_occ_nodes;
-  do {
+  vector<OcTreeNode *> collapsed_occ_nodes;
+  do
+  {
     collapsed_occ_nodes.clear();
     for (OcTree::iterator it = tree->begin(); it != tree->end(); ++it)
     {
-      if(tree->isNodeOccupied(*it) && it.getDepth() < maxDepth)
+      if (tree->isNodeOccupied(*it) && it.getDepth() < maxDepth)
       {
         collapsed_occ_nodes.push_back(&(*it));
       }
     }
-    for (vector<OcTreeNode*>::iterator it = collapsed_occ_nodes.begin(); it != collapsed_occ_nodes.end(); ++it)
+    for (vector<OcTreeNode *>::iterator it = collapsed_occ_nodes.begin(); it != collapsed_occ_nodes.end(); ++it)
     {
       tree->expandNode(*it);
     }
     cout << "expanded " << collapsed_occ_nodes.size() << " nodes" << endl;
-  } while(collapsed_occ_nodes.size() > 0);
+  } while (collapsed_occ_nodes.size() > 0);
 
   vector<point3d> pcl;
   for (OcTree::iterator it = tree->begin(); it != tree->end(); ++it)
   {
-    if(tree->isNodeOccupied(*it))
+    if (tree->isNodeOccupied(*it))
     {
       pcl.push_back(it.getCoordinate());
     }
@@ -107,8 +110,8 @@ int main(int argc, char** argv) {
     << "POINTS " << pcl.size() << endl
     << "DATA ascii" << endl;
   for (size_t i = 0; i < pcl.size(); i++)
-      f << pcl[i].x() << " " << pcl[i].y() << " " << pcl[i].z() << endl;
+    f << pcl[i].x() << " " << pcl[i].y() << " " << pcl[i].z() << endl;
   f.close();
-  
+
   return 0;
 }

@@ -4,12 +4,10 @@
  *
  */
 
-
 /**
  * \namespace octomap Namespace the OctoMap library and visualization tools
  *
  */
-
 
 /** \mainpage OctoMap
 
@@ -77,7 +75,7 @@ https://github.com/OctoMap/octomap.</p>
 
 
 \section gettingstarted_sec Getting Started
- 
+
 
 <p>
   Jump right in and have a look at the main class \ref octomap::OcTree OcTree and the examples in src/octomap/simple_example.cpp.
@@ -88,7 +86,7 @@ https://github.com/OctoMap/octomap.</p>
   \ref leaf_iterator "leaf_iterator",  \ref tree_iterator "tree_iterator", or \ref leaf_bbx_iterator "leaf_bbx_iterator".</p>
 
   \image html uml_overview.png
-  
+
   <p>The \ref octomap::OcTree "OcTree" class is derived from \ref octomap::OccupancyOcTreeBase "OccupancyOcTreeBase", with most
   functionality in the parent class. Also derive from OccupancyOcTreeBase if you you want to implement
   your own Octree and node classes. You can have a look at the classes \ref octomap::OcTreeStamped "OcTreeStamped" and \ref octomap::OcTreeNodeStamped "OcTreeNodeStamped" as examples.
@@ -106,7 +104,3 @@ You will find an example 3D scan (please bunzip2 first) and an example OctoMap .
 
 
 **/
-
-
-
-

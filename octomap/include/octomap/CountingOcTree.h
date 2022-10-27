@@ -34,12 +34,12 @@
 #ifndef OCTOMAP_COUNTING_OCTREE_HH
 #define OCTOMAP_COUNTING_OCTREE_HH
 
-
 #include <stdio.h>
 #include "OcTreeBase.h"
 #include "OcTreeDataNode.h"
 
-namespace octomap {
+namespace octomap
+{
 
   /**
    * An Octree-node which stores an internal counter per node / volume.
@@ -50,20 +50,17 @@ namespace octomap {
    * \note In our mapping system this data structure is used in
    *       CountingOcTree in the sensor model only
    */
-  class CountingOcTreeNode : public OcTreeDataNode<unsigned int> {
+  class CountingOcTreeNode : public OcTreeDataNode<unsigned int>
+  {
 
   public:
-
     CountingOcTreeNode();
     ~CountingOcTreeNode();
-    
+
     inline unsigned int getCount() const { return getValue(); }
     inline void increaseCount() { value++; }
-    inline void setCount(unsigned c) {this->setValue(c); }
-
+    inline void setCount(unsigned c) { this->setValue(c); }
   };
-
-
 
   /**
    * An AbstractOcTree which stores an internal counter per node / volume.
@@ -73,51 +70,51 @@ namespace octomap {
    *
    * \note Was only used internally, not used anymore
    */
-  class CountingOcTree : public OcTreeBase <CountingOcTreeNode> {
+  class CountingOcTree : public OcTreeBase<CountingOcTreeNode>
+  {
 
   public:
     /// Default constructor, sets resolution of leafs
     CountingOcTree(double resolution);
-    virtual CountingOcTreeNode* updateNode(const point3d& value);
-    CountingOcTreeNode* updateNode(const OcTreeKey& k);
-    void getCentersMinHits(point3d_list& node_centers, unsigned int min_hits) const;
+    virtual CountingOcTreeNode *updateNode(const point3d &value);
+    CountingOcTreeNode *updateNode(const OcTreeKey &k);
+    void getCentersMinHits(point3d_list &node_centers, unsigned int min_hits) const;
 
   protected:
-
-    void getCentersMinHitsRecurs( point3d_list& node_centers,
-                                  unsigned int& min_hits,
-                                  unsigned int max_depth,
-                                  CountingOcTreeNode* node, unsigned int depth,
-                                  const OcTreeKey& parent_key) const;
+    void getCentersMinHitsRecurs(point3d_list &node_centers,
+                                 unsigned int &min_hits,
+                                 unsigned int max_depth,
+                                 CountingOcTreeNode *node, unsigned int depth,
+                                 const OcTreeKey &parent_key) const;
 
     /**
      * Static member object which ensures that this OcTree's prototype
-     * ends up in the classIDMapping only once. You need this as a 
+     * ends up in the classIDMapping only once. You need this as a
      * static member in any derived octree class in order to read .ot
      * files through the AbstractOcTree factory. You should also call
      * ensureLinking() once from the constructor.
      */
-    class StaticMemberInitializer{
-       public:
-         StaticMemberInitializer() {
-           CountingOcTree* tree = new CountingOcTree(0.1);
-           tree->clearKeyRays();
-           AbstractOcTree::registerTreeType(tree);
-         }
+    class StaticMemberInitializer
+    {
+    public:
+      StaticMemberInitializer()
+      {
+        CountingOcTree *tree = new CountingOcTree(0.1);
+        tree->clearKeyRays();
+        AbstractOcTree::registerTreeType(tree);
+      }
 
-         /**
-         * Dummy function to ensure that MSVC does not drop the
-         * StaticMemberInitializer, causing this tree failing to register.
-         * Needs to be called from the constructor of this octree.
-         */
-         void ensureLinking() {};
+      /**
+       * Dummy function to ensure that MSVC does not drop the
+       * StaticMemberInitializer, causing this tree failing to register.
+       * Needs to be called from the constructor of this octree.
+       */
+      void ensureLinking(){};
     };
     /// static member to ensure static initialization (only once)
     static StaticMemberInitializer countingOcTreeMemberInit;
   };
 
-
 }
-
 
 #endif
