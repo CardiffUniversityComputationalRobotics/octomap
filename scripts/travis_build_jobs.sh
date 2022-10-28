@@ -8,7 +8,7 @@ function build {
   cd $1
   mkdir build
   cd build
-  cmake .. -DCMAKE_INSTALL_PREFIX=/tmp/octomap/$1
+  cmake .. -DCMAKE_INSTALL_PREFIX=/tmp/social_octomap/$1
   make -j4
   cd ..
 }
@@ -20,7 +20,7 @@ case "$1" in
   make install
   ;;
 "components")
-  build octomap
+  build social_octomap
   cd build && make test
   make install
   cd ../..

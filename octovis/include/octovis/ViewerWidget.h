@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -27,98 +27,98 @@
 
 #include "SceneObject.h"
 #include "SelectionBox.h"
-#include <octomap/octomap.h>
+#include <social_octomap/social_octomap.h>
 #include <qglviewer.h>
 
-namespace octomap{
+namespace social_octomap
+{
 
-class ViewerWidget : public QGLViewer {
-  Q_OBJECT
+  class ViewerWidget : public QGLViewer
+  {
+    Q_OBJECT
 
- public:
+  public:
+    ViewerWidget(QWidget *parent = NULL);
+    void clearAll();
 
-  ViewerWidget(QWidget* parent = NULL);
-  void clearAll();
+    /**
+     * Adds an object to the scene that can be drawn
+     *
+     * @param obj SceneObject to be added
+     */
+    void addSceneObject(SceneObject *obj);
 
-  /**
-   * Adds an object to the scene that can be drawn
-   *
-   * @param obj SceneObject to be added
-   */
-  void addSceneObject(SceneObject* obj);
+    /**
+     * Removes a SceneObject from the list of drawable objects if
+     * it has been added previously. Does nothing otherwise.
+     *
+     * @param obj SceneObject to be removed
+     */
+    void removeSceneObject(SceneObject *obj);
 
-  /**
-   * Removes a SceneObject from the list of drawable objects if
-   * it has been added previously. Does nothing otherwise.
-   *
-   * @param obj SceneObject to be removed
-   */
-  void removeSceneObject(SceneObject* obj);
+  public slots:
+    void enablePrintoutMode(bool enabled = true);
+    void enableHeightColorMode(bool enabled = true);
+    void enableSemanticColoring(bool enabled = true);
+    void enableSelectionBox(bool enabled = true);
+    void setCamPosition(double x, double y, double z, double lookX, double lookY, double lookZ);
+    void setCamPose(const octomath::Pose6D &pose);
+    virtual void setSceneBoundingBox(const qglviewer::Vec &min, const qglviewer::Vec &max);
+    void deleteCameraPath(int id);
+    void appendToCameraPath(int id, const octomath::Pose6D &pose);
+    void appendCurrentToCameraPath(int id);
+    void addCurrentToCameraPath(int id, int frame);
+    void removeFromCameraPath(int id, int frame);
+    void updateCameraPath(int id, int frame);
+    void jumpToCamFrame(int id, int frame);
+    void playCameraPath(int id, int start_frame);
+    void stopCameraPath(int id);
+    const SelectionBox &selectionBox() const { return m_selectionBox; }
 
- public slots:
-  void enablePrintoutMode (bool enabled = true);
-  void enableHeightColorMode (bool enabled = true);
-  void enableSemanticColoring (bool enabled = true);
-  void enableSelectionBox (bool enabled = true);
-  void setCamPosition(double x, double y, double z, double lookX, double lookY, double lookZ);
-  void setCamPose(const octomath::Pose6D& pose);
-  virtual void setSceneBoundingBox(const qglviewer::Vec& min, const qglviewer::Vec& max);
-  void deleteCameraPath(int id);
-  void appendToCameraPath(int id, const octomath::Pose6D& pose);
-  void appendCurrentToCameraPath(int id);
-  void addCurrentToCameraPath(int id, int frame);
-  void removeFromCameraPath(int id, int frame);
-  void updateCameraPath(int id, int frame);
-  void jumpToCamFrame(int id, int frame);
-  void playCameraPath(int id, int start_frame);
-  void stopCameraPath(int id);
-  const SelectionBox& selectionBox() const { return m_selectionBox;}
+    /**
+     * Resets the 3D viewpoint to the initial value
+     */
+    void resetView();
 
-  /**
-   * Resets the 3D viewpoint to the initial value
-   */
-  void resetView();
+  private slots:
+    void cameraPathFinished();
+    void cameraPathInterpolated();
 
-private slots:
-   void cameraPathFinished();
-   void cameraPathInterpolated();
+  signals:
+    void cameraPathStopped(int id);
+    void cameraPathFrameChanged(int id, int current_camera_frame);
+    void select(const QMouseEvent *e);
 
-signals:
-   void cameraPathStopped(int id);
-   void cameraPathFrameChanged(int id, int current_camera_frame);
-   void select(const QMouseEvent* e);
+  protected:
+    virtual void draw();
+    virtual void drawWithNames();
+    virtual void init();
+    /**
+     * Overloaded from QGLViewer. Draws own axis and grid in scale, then calls QGLViewer::postDraw().
+     */
+    virtual void postDraw();
+    virtual void postSelection(const QPoint &);
+    virtual QString helpString() const;
 
- protected:
+    qglviewer::Quaternion poseToQGLQuaternion(const octomath::Pose6D &pose);
 
-  virtual void draw();
-  virtual void drawWithNames();
-  virtual void init();
-  /**
-   * Overloaded from QGLViewer. Draws own axis and grid in scale, then calls QGLViewer::postDraw().
-   */
-  virtual void postDraw();
-  virtual void postSelection(const QPoint&);
-  virtual QString helpString() const;
+    std::vector<SceneObject *> m_sceneObjects;
+    SelectionBox m_selectionBox;
 
-  qglviewer::Quaternion poseToQGLQuaternion(const octomath::Pose6D& pose);
+    bool m_printoutMode;
+    bool m_heightColorMode;
+    bool m_semantic_coloring;
 
-  std::vector<SceneObject*> m_sceneObjects;
-  SelectionBox m_selectionBox;
+    bool m_drawAxis; // actual state of axis (original overwritten)
+    bool m_drawGrid; // actual state of grid (original overwritten)
+    bool m_drawSelectionBox;
 
-  bool m_printoutMode;
-  bool m_heightColorMode;
-  bool m_semantic_coloring;
+    double m_zMin;
+    double m_zMax;
 
-  bool m_drawAxis; // actual state of axis (original overwritten)
-  bool m_drawGrid; // actual state of grid (original overwritten)
-  bool m_drawSelectionBox;
-
-  double m_zMin;
-  double m_zMax;
-
-  int m_current_camera_path;
-  int m_current_camera_frame;
-};
+    int m_current_camera_path;
+    int m_current_camera_frame;
+  };
 
 }
 

@@ -122,5 +122,5 @@ ENDIF()
 
 # You need to use qmake of QT4. You are using QT3 if you get:
 
-#CMakeFiles/octovis.dir/ViewerWidget.cpp.o: In function `octomap::ViewerWidget::ViewerWidget(QWidget*)':
+#CMakeFiles/octovis.dir/ViewerWidget.cpp.o: In function `social_octomap::ViewerWidget::ViewerWidget(QWidget*)':
 #ViewerWidget.cpp:(.text+0x1715): undefined reference to `QGLViewer::QGLViewer(QWidget*, QGLWidget const*, QFlags<Qt::WindowType>)'

@@ -103,7 +103,7 @@ add_library(octovis-static STATIC ${viewerlib_SRCS})
 target_link_libraries(octovis-static
   ${OPENGL_gl_LIBRARY} 
   ${OPENGL_glu_LIBRARY} 
-  ${OCTOMAP_LIBRARIES}
+  ${SOCIAL_OCTOMAP_LIBRARIES}
   ${QGLViewer_LIBRARIES}
 )
 set_target_properties(octovis-static PROPERTIES OUTPUT_NAME octovis)
@@ -112,7 +112,7 @@ add_library(octovis-shared SHARED ${viewerlib_SRCS})
 target_link_libraries(octovis-shared 
   ${OPENGL_gl_LIBRARY} 
   ${OPENGL_glu_LIBRARY} 
-  ${OCTOMAP_LIBRARIES}
+  ${SOCIAL_OCTOMAP_LIBRARIES}
   ${QGLViewer_LIBRARIES}
 )
 set_target_properties(octovis-shared PROPERTIES
@@ -121,11 +121,11 @@ set_target_properties(octovis-shared PROPERTIES
   SOVERSION ${OCTOVIS_SOVERSION}
 )
 
-# directly depend on the octomap library target when building the
+# directly depend on the social_octomap library target when building the
 # complete distribution, so it is recompiled as needed
-if (CMAKE_PROJECT_NAME STREQUAL "octomap-distribution")
-  ADD_DEPENDENCIES(octovis-static octomap-static)
-  ADD_DEPENDENCIES(octovis-shared octomap)
+if (CMAKE_PROJECT_NAME STREQUAL "social_octomap-distribution")
+  ADD_DEPENDENCIES(octovis-static social_octomap-static)
+  ADD_DEPENDENCIES(octovis-shared social_octomap)
 endif()
 
 
@@ -136,7 +136,7 @@ add_executable(octovis ${viewer_SRCS} ${viewer_UIS_H} ${viewer_MOC_SRCS} ${viewe
 target_link_libraries(octovis 
 #  ${QGLViewer_LIBRARIES}
   ${QT_LIBRARIES}
-  ${OCTOMAP_LIBRARIES}
+  ${SOCIAL_OCTOMAP_LIBRARIES}
   octovis-shared
 )
 
