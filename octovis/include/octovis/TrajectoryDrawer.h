@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -28,20 +28,22 @@
 #include "SceneObject.h"
 #include <vector>
 
-namespace octomap {
+namespace social_octomap
+{
 
-  class TrajectoryDrawer : public ScanGraphDrawer{
+  class TrajectoryDrawer : public ScanGraphDrawer
+  {
   public:
     TrajectoryDrawer();
-    TrajectoryDrawer(const ScanGraph& graph);
+    TrajectoryDrawer(const ScanGraph &graph);
     virtual ~TrajectoryDrawer();
     virtual void draw() const;
     virtual void clear();
-    virtual void setScanGraph(const octomap::ScanGraph& graph);
+    virtual void setScanGraph(const social_octomap::ScanGraph &graph);
 
   protected:
-    GLfloat* m_trajectoryVertexArray;
-    GLfloat* m_trajectoryColorArray;
+    GLfloat *m_trajectoryVertexArray;
+    GLfloat *m_trajectoryColorArray;
     unsigned int m_trajectorySize; //!< number of nodes in the ScanGraph
   };
 

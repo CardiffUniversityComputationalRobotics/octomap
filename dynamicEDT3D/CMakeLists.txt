@@ -51,14 +51,14 @@ set(INSTALL_TARGETS_DEFAULT_ARGS
 	ARCHIVE DESTINATION lib
 )
 
-find_package(octomap REQUIRED
-  HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/octomap
-   ${CMAKE_SOURCE_DIR}/../octomap/lib/cmake/octomap
+find_package(social_octomap REQUIRED
+  HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/social_octomap
+   ${CMAKE_SOURCE_DIR}/../social_octomap/lib/cmake/social_octomap
 )
-MESSAGE(STATUS "Found octomap version: " ${octomap_VERSION})
-MESSAGE(STATUS "octomap libraries: ${OCTOMAP_LIBRARIES}")
+MESSAGE(STATUS "Found social_octomap version: " ${social_octomap_VERSION})
+MESSAGE(STATUS "social_octomap libraries: ${SOCIAL_OCTOMAP_LIBRARIES}")
 
-INCLUDE_DIRECTORIES(BEFORE SYSTEM ${OCTOMAP_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(BEFORE SYSTEM ${SOCIAL_OCTOMAP_INCLUDE_DIRS})
 
 ADD_SUBDIRECTORY(src)
 
@@ -73,7 +73,7 @@ install(FILES package.xml DESTINATION "${CMAKE_INSTALL_DATADIR}/dynamic_edt_3d")
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} "")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} DESTINATION share/ament_index/resource_index/packages)
 
-#TODO: this conflicts with the octomap uninstall
+#TODO: this conflicts with the social_octomap uninstall
 #it is not only a target name problem, also both will use the same manifest file
 #in the same binary directory
 #configure_file(

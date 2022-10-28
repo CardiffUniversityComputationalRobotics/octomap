@@ -1,6 +1,6 @@
 # It defines the following variables
-#  OCTOVIS_INCLUDE_DIRS  - include directories for OctoMap viewer
-#  OCTOVIS_LIBRARY_DIRS  - library directories for OctoMap viewer
+#  OCTOVIS_INCLUDE_DIRS  - include directories for SocialOctoMap viewer
+#  OCTOVIS_LIBRARY_DIRS  - library directories for SocialOctoMap viewer
 #  OCTOVIS_LIBRARIES     - libraries to link against
 #  OCTOVIS_MAJOR_VERSION - major version
 #  OCTOVIS_MINOR_VERSION - minor version

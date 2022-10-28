@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -28,76 +28,96 @@
 #define CAMERA_PATH_ID 13
 #define ROBOT_TRAJECTORY_ID 14
 
-CameraFollowMode::CameraFollowMode(octomap::ScanGraph *graph)
-: QObject(), m_scan_graph(graph), m_current_scan(1), m_current_cam_frame(1), m_number_cam_frames(0),
-  m_followRobotTrajectory(false) {
+CameraFollowMode::CameraFollowMode(social_octomap::ScanGraph *graph)
+    : QObject(), m_scan_graph(graph), m_current_scan(1), m_current_cam_frame(1), m_number_cam_frames(0),
+      m_followRobotTrajectory(false)
+{
 }
 
-CameraFollowMode::~CameraFollowMode() {
+CameraFollowMode::~CameraFollowMode()
+{
 }
 
-
-void CameraFollowMode::jumpToFrame(unsigned int frame) {
-  if(m_followRobotTrajectory) {
-    if(frame <= m_scan_graph->size()) {
+void CameraFollowMode::jumpToFrame(unsigned int frame)
+{
+  if (m_followRobotTrajectory)
+  {
+    if (frame <= m_scan_graph->size())
+    {
       m_current_scan = frame;
-      octomath::Pose6D pose = m_scan_graph->getNodeByID(frame-1)->pose;
+      octomath::Pose6D pose = m_scan_graph->getNodeByID(frame - 1)->pose;
       emit changeCamPose(pose);
     }
-  } else {
+  }
+  else
+  {
     m_current_cam_frame = frame;
-    emit jumpToCamFrame(CAMERA_PATH_ID, m_current_cam_frame-1);
+    emit jumpToCamFrame(CAMERA_PATH_ID, m_current_cam_frame - 1);
   }
 }
 
-void CameraFollowMode::play() {
-  if(m_followRobotTrajectory) {
+void CameraFollowMode::play()
+{
+  if (m_followRobotTrajectory)
+  {
     emit deleteCameraPath(ROBOT_TRAJECTORY_ID);
-    //emit appendCurrentToCameraPath(ROBOT_TRAJECTORY_ID);
+    // emit appendCurrentToCameraPath(ROBOT_TRAJECTORY_ID);
     m_start_frame = m_current_scan;
-    for(unsigned int i = m_start_frame; i <= m_scan_graph->size(); i++) {
-      octomap::ScanNode* scanNode = m_scan_graph->getNodeByID(i-1);
+    for (unsigned int i = m_start_frame; i <= m_scan_graph->size(); i++)
+    {
+      social_octomap::ScanNode *scanNode = m_scan_graph->getNodeByID(i - 1);
       if (scanNode)
         emit appendToCameraPath(ROBOT_TRAJECTORY_ID, scanNode->pose);
-      else{
-        std::cerr << "Error in " << __FILE__ << ":" << __LINE__ <<" : invalid node ID "<< i-1 << std::endl;
+      else
+      {
+        std::cerr << "Error in " << __FILE__ << ":" << __LINE__ << " : invalid node ID " << i - 1 << std::endl;
       }
     }
     emit playCameraPath(ROBOT_TRAJECTORY_ID, 0);
-  } else {
+  }
+  else
+  {
     m_start_frame = m_current_cam_frame;
-    emit playCameraPath(CAMERA_PATH_ID, m_start_frame-1);
+    emit playCameraPath(CAMERA_PATH_ID, m_start_frame - 1);
   }
 }
 
-void CameraFollowMode::pause() {
+void CameraFollowMode::pause()
+{
   emit stopCameraPath(CAMERA_PATH_ID);
   emit stopCameraPath(ROBOT_TRAJECTORY_ID);
 }
 
-
-void CameraFollowMode::setScanGraph(octomap::ScanGraph *graph) {
+void CameraFollowMode::setScanGraph(social_octomap::ScanGraph *graph)
+{
   m_scan_graph = graph;
   emit scanGraphAvailable(true);
 }
 
-void CameraFollowMode::cameraPathStopped(int id) {
-  if(id == CAMERA_PATH_ID || id == ROBOT_TRAJECTORY_ID) {
+void CameraFollowMode::cameraPathStopped(int id)
+{
+  if (id == CAMERA_PATH_ID || id == ROBOT_TRAJECTORY_ID)
+  {
     emit stopped();
   }
 }
 
-void CameraFollowMode::cameraPathFrameChanged(int id, int current_camera_frame) {
-  if(m_followRobotTrajectory) {
+void CameraFollowMode::cameraPathFrameChanged(int id, int current_camera_frame)
+{
+  if (m_followRobotTrajectory)
+  {
     m_current_scan = m_start_frame + current_camera_frame;
     emit frameChanged(m_current_scan);
-  } else {
+  }
+  else
+  {
     m_current_cam_frame = m_start_frame + current_camera_frame;
     emit frameChanged(m_current_cam_frame);
   }
 }
 
-void CameraFollowMode::clearCameraPath() {
+void CameraFollowMode::clearCameraPath()
+{
   emit deleteCameraPath(CAMERA_PATH_ID);
   m_current_cam_frame = 1;
   m_number_cam_frames = 0;
@@ -105,35 +125,44 @@ void CameraFollowMode::clearCameraPath() {
   emit changeNumberOfFrames(m_number_cam_frames);
 }
 
-void CameraFollowMode::saveToCameraPath() {
-  emit updateCameraPath(CAMERA_PATH_ID, m_current_cam_frame-1);
+void CameraFollowMode::saveToCameraPath()
+{
+  emit updateCameraPath(CAMERA_PATH_ID, m_current_cam_frame - 1);
 }
 
-void CameraFollowMode::addToCameraPath() {
-  emit addCurrentToCameraPath(CAMERA_PATH_ID, m_current_cam_frame-1);
+void CameraFollowMode::addToCameraPath()
+{
+  emit addCurrentToCameraPath(CAMERA_PATH_ID, m_current_cam_frame - 1);
   m_number_cam_frames++;
-  if(m_number_cam_frames == 1) m_current_cam_frame = 1;
-  else m_current_cam_frame++;
+  if (m_number_cam_frames == 1)
+    m_current_cam_frame = 1;
+  else
+    m_current_cam_frame++;
   emit frameChanged(m_current_cam_frame);
   emit changeNumberOfFrames(m_number_cam_frames);
 }
 
-void CameraFollowMode::removeFromCameraPath() {
-  if(m_number_cam_frames>0) {
-    emit removeFromCameraPath(CAMERA_PATH_ID, m_current_cam_frame-1);
+void CameraFollowMode::removeFromCameraPath()
+{
+  if (m_number_cam_frames > 0)
+  {
+    emit removeFromCameraPath(CAMERA_PATH_ID, m_current_cam_frame - 1);
     m_number_cam_frames--;
     emit changeNumberOfFrames(m_number_cam_frames);
   }
 }
 
-void CameraFollowMode::followCameraPath() {
+void CameraFollowMode::followCameraPath()
+{
   m_followRobotTrajectory = false;
   emit frameChanged(m_current_cam_frame);
   emit changeNumberOfFrames(m_number_cam_frames);
 }
 
-void CameraFollowMode::followRobotPath() {
-  if(m_scan_graph) {
+void CameraFollowMode::followRobotPath()
+{
+  if (m_scan_graph)
+  {
     m_followRobotTrajectory = true;
     emit frameChanged(m_current_scan);
     emit changeNumberOfFrames(m_scan_graph->size());

@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -27,14 +27,16 @@
 
 #include <octovis/OcTreeDrawer.h>
 
-namespace octomap {
+namespace social_octomap
+{
 
-  class OcTreeRecord {
+  class OcTreeRecord
+  {
   public:
-    AbstractOcTree*  octree;
-    OcTreeDrawer*    octree_drawer;
-    unsigned int     id;
-    pose6d           origin;
+    AbstractOcTree *octree;
+    OcTreeDrawer *octree_drawer;
+    unsigned int id;
+    pose6d origin;
   };
 
 } // namespace

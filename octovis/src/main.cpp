@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -27,20 +27,28 @@
 #include <octovis/ViewerGui.h>
 #include <stdlib.h> //strtol
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
   std::string filename = "";
   int depth = 0;
-  if (argc == 1) { 
-    std::cout << "Usage: " << argv[0] << " [mapfile] [tree depth cutoff]\n"; 
-    std::cout << "Where the optional [tree depth cutoff] is an integer from 1 to 16\n"; 
+  if (argc == 1)
+  {
+    std::cout << "Usage: " << argv[0] << " [mapfile] [tree depth cutoff]\n";
+    std::cout << "Where the optional [tree depth cutoff] is an integer from 1 to 16\n";
   }
-  if (argc >= 2) { filename = std::string(argv[1]); }
-  if (argc >= 3) { depth = std::strtol(argv[2], NULL, 10); }//zero on parse error
+  if (argc >= 2)
+  {
+    filename = std::string(argv[1]);
+  }
+  if (argc >= 3)
+  {
+    depth = std::strtol(argv[2], NULL, 10);
+  } // zero on parse error
 
   QApplication app(argc, argv);
 
-  octomap::ViewerGui gui(filename, NULL, depth);
-  gui.show(); 
+  social_octomap::ViewerGui gui(filename, NULL, depth);
+  gui.show();
   return app.exec();
 }

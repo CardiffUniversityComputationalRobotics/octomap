@@ -24,8 +24,8 @@ if __name__ == '__main__':
   
   
   
-  manifests=["octomap/package.xml","octovis/package.xml","dynamicEDT3D/package.xml"]
-  cmakelists=["octomap/CMakeLists.txt","octovis/CMakeLists.txt","dynamicEDT3D/CMakeLists.txt"]
+  manifests=["social_octomap/package.xml","octovis/package.xml","dynamicEDT3D/package.xml"]
+  cmakelists=["social_octomap/CMakeLists.txt","octovis/CMakeLists.txt","dynamicEDT3D/CMakeLists.txt"]
   versions = []
 
   # find versions in package.xml
@@ -63,7 +63,7 @@ if __name__ == '__main__':
       print "Error: check current versions, mismatch: %d.%d.%d vs. %d.%d.%d" %(tuple(v)+tuple(versions[0]))
       exit(-1)
 
-  print "OctoMap component versions found: %d.%d.%d" % tuple(versions[0])
+  print "SocialOctoMap component versions found: %d.%d.%d" % tuple(versions[0])
   # "bump version" from catkin:
   # find the desired index
   idx = dict(major=0, minor=1, patch=2)[bump]

@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -28,7 +28,7 @@
 #include <qglobal.h>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QtWidgets>
-#else  // QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#else // QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
 #endif // QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QFileDialog>
@@ -46,26 +46,28 @@
 #include "ViewerSettingsPanelCamera.h"
 #include "ui_ViewerGui.h"
 
-#include <octomap/AbstractOcTree.h>
-#include <octomap/OcTreeBase.h>
+#include <social_octomap/AbstractOcTree.h>
+#include <social_octomap/OcTreeBase.h>
 #include <octovis/OcTreeRecord.h>
 
-namespace octomap {
+namespace social_octomap
+{
 
-  class ViewerGui : public QMainWindow {
+  class ViewerGui : public QMainWindow
+  {
     Q_OBJECT
-   
+
   public:
-    ViewerGui(const std::string& filename="", QWidget *parent = 0, unsigned int initTreeDepth = 16);
+    ViewerGui(const std::string &filename = "", QWidget *parent = 0, unsigned int initTreeDepth = 16);
     ~ViewerGui();
 
-    static const unsigned int LASERTYPE_URG  = 0;
+    static const unsigned int LASERTYPE_URG = 0;
     static const unsigned int LASERTYPE_SICK = 1;
 
     // use this drawer id if loading files or none is specified in msg
-    static const unsigned int DEFAULT_OCTREE_ID  = 0; 
+    static const unsigned int DEFAULT_OCTREE_ID = 0;
 
-    public slots:
+  public slots:
 
     void changeTreeDepth(int depth);
     void addNextScans(unsigned scans);
@@ -73,7 +75,7 @@ namespace octomap {
 
     bool isShown();
 
-    private slots:
+  private slots:
 
     // auto-connected Slots (by name))
 
@@ -113,7 +115,7 @@ namespace octomap {
     void on_actionHideBackground_toggled(bool checked);
     void on_actionAlternateRendering_toggled(bool checked);
     void on_actionClear_triggered();
-    void voxelSelected(const QMouseEvent* e);
+    void voxelSelected(const QMouseEvent *e);
 
     void on_action_bg_black_triggered();
     void on_action_bg_white_triggered();
@@ -176,7 +178,6 @@ namespace octomap {
     // open a map collection (.hot-file)
     void openMapCollection();
 
-
     void setOcTreeUISwitches();
 
     /*!
@@ -185,44 +186,43 @@ namespace octomap {
     void generateOctree();
     void showOcTree();
 
-    void showInfo(QString string, bool newline=false);
+    void showInfo(QString string, bool newline = false);
 
-    void addOctree(AbstractOcTree* tree, int id, pose6d origin);
-    void addOctree(AbstractOcTree* tree, int id);
-    bool getOctreeRecord(int id, OcTreeRecord*& otr);
+    void addOctree(AbstractOcTree *tree, int id, pose6d origin);
+    void addOctree(AbstractOcTree *tree, int id);
+    bool getOctreeRecord(int id, OcTreeRecord *&otr);
 
-    void saveCameraPosition(const char* filename) const;
-    void loadCameraPosition(const char* filename);
+    void saveCameraPosition(const char *filename) const;
+    void loadCameraPosition(const char *filename);
 
-    void updateNodesInBBX(const point3d& min, const point3d& max, bool occupied);
-    void setNodesInBBX(const point3d& min, const point3d& max, bool occupied);
-    void setNonNodesInBBX(const point3d& min, const point3d& max, bool occupied);
+    void updateNodesInBBX(const point3d &min, const point3d &max, bool occupied);
+    void setNodesInBBX(const point3d &min, const point3d &max, bool occupied);
+    void setNonNodesInBBX(const point3d &min, const point3d &max, bool occupied);
 
     std::map<int, OcTreeRecord> m_octrees;
- 
-    ScanGraph* m_scanGraph;
+
+    ScanGraph *m_scanGraph;
     ScanGraph::iterator m_nextScanToAdd;
 
     Ui::ViewerGuiClass ui;
-    ViewerWidget* m_glwidget;
-    TrajectoryDrawer* m_trajectoryDrawer;
-    PointcloudDrawer* m_pointcloudDrawer;
-    CameraFollowMode* m_cameraFollowMode;
+    ViewerWidget *m_glwidget;
+    TrajectoryDrawer *m_trajectoryDrawer;
+    PointcloudDrawer *m_pointcloudDrawer;
+    CameraFollowMode *m_cameraFollowMode;
     double m_octreeResolution;
     double m_laserMaxRange;
     double m_occupancyThresh; // FIXME: This is not really used at the moment...
     unsigned int m_max_tree_depth;
     unsigned int m_laserType; // SICK or Hokuyo /URG
     bool m_cameraStored;
-    QLabel* m_nodeSelected;
-    QLabel* m_mapSizeStatus;
-    QLabel* m_mapMemoryStatus;
+    QLabel *m_nodeSelected;
+    QLabel *m_mapSizeStatus;
+    QLabel *m_mapMemoryStatus;
 
     /// Filename of last loaded file, in case it is necessary to reload it
     std::string m_filename;
   };
 
 } // namespace
-
 
 #endif // VIEWERGUI_H

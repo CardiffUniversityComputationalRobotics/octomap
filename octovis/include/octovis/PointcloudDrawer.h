@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -27,25 +27,26 @@
 
 #include "SceneObject.h"
 
-namespace octomap {
+namespace social_octomap
+{
 
   /**
    * Drawer which visualizes Pointclouds
    */
-  class PointcloudDrawer: public ScanGraphDrawer {
+  class PointcloudDrawer : public ScanGraphDrawer
+  {
   public:
     PointcloudDrawer();
-    PointcloudDrawer(const ScanGraph& graph);
+    PointcloudDrawer(const ScanGraph &graph);
     virtual ~PointcloudDrawer();
 
     virtual void draw() const;
     virtual void clear();
-    virtual void setScanGraph(const ScanGraph& graph);
+    virtual void setScanGraph(const ScanGraph &graph);
 
   protected:
-    GLfloat* m_pointsArray;
+    GLfloat *m_pointsArray;
     unsigned m_numberPoints;
-
   };
 
 }

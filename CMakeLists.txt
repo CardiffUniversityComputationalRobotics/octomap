@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
-PROJECT( octomap-distribution )
+PROJECT( social_octomap-distribution )
 
 ENABLE_TESTING()  # enable CTest environment of subprojects
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)  # enables -fPIC in applicable compilers (required to avoid link errors in some cases)
@@ -13,7 +13,7 @@ if(OCTOVIS_QT5)
 	set(CMAKE_CXX_STANDARD 11)
 endif(OCTOVIS_QT5)
 
-ADD_SUBDIRECTORY( octomap )
+ADD_SUBDIRECTORY( social_octomap )
 
 if(BUILD_OCTOVIS_SUBPROJECT)
 	ADD_SUBDIRECTORY( octovis )

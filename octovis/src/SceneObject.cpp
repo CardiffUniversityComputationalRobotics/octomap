@@ -1,7 +1,7 @@
 /*
  * This file is part of OctoMap - An Efficient Probabilistic 3D Mapping
  * Framework Based on Octrees
- * http://octomap.github.io
+ * http://social_octomap.github.io
  *
  * Copyright (c) 2009-2014, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved. License for the viewer octovis: GNU GPL v2
@@ -26,20 +26,23 @@
 #include <octovis/SceneObject.h>
 
 #ifndef RAD2DEG
-#define RAD2DEG(x) ((x) * 57.29577951308232087721)
+#define RAD2DEG(x) ((x)*57.29577951308232087721)
 #endif
 
-namespace octomap {
+namespace social_octomap
+{
 
-  SceneObject::SceneObject() :
-    m_zMin(0.0), m_zMax(1.0), m_colorMode(CM_FLAT) {
+  SceneObject::SceneObject() : m_zMin(0.0), m_zMax(1.0), m_colorMode(CM_FLAT)
+  {
   }
 
-  void SceneObject::heightMapColor(double h, GLfloat* glArrayPos) const {
+  void SceneObject::heightMapColor(double h, GLfloat *glArrayPos) const
+  {
     if (m_zMin >= m_zMax)
       h = 0.5;
-    else{
-      h = (1.0 - std::min(std::max((h-m_zMin)/ (m_zMax - m_zMin), 0.0), 1.0)) *0.8;
+    else
+    {
+      h = (1.0 - std::min(std::max((h - m_zMin) / (m_zMax - m_zMin), 0.0), 1.0)) * 0.8;
     }
 
     // blend over HSV-values (more colors)
@@ -59,28 +62,43 @@ namespace octomap {
     m = v * (1 - s);
     n = v * (1 - s * f);
 
-    switch (i) {
+    switch (i)
+    {
     case 6:
     case 0:
-      r = v; g = n; b = m;
+      r = v;
+      g = n;
+      b = m;
       break;
     case 1:
-      r = n; g = v; b = m;
+      r = n;
+      g = v;
+      b = m;
       break;
     case 2:
-      r = m; g = v; b = n;
+      r = m;
+      g = v;
+      b = n;
       break;
     case 3:
-      r = m; g = n; b = v;
+      r = m;
+      g = n;
+      b = v;
       break;
     case 4:
-      r = n; g = m; b = v;
+      r = n;
+      g = m;
+      b = v;
       break;
     case 5:
-      r = v; g = m; b = n;
+      r = v;
+      g = m;
+      b = n;
       break;
     default:
-      r = 1; g = 0.5; b = 0.5;
+      r = 1;
+      g = 0.5;
+      b = 0.5;
       break;
     }
 
@@ -89,17 +107,18 @@ namespace octomap {
     glArrayPos[2] = b;
   }
 
-  void SceneObject::heightMapGray(double h, GLfloat* glArrayPos) const {
+  void SceneObject::heightMapGray(double h, GLfloat *glArrayPos) const
+  {
     if (m_zMin >= m_zMax)
       h = 0.5;
-    else{
-      h = std::min(std::max((h-m_zMin)/ (m_zMax - m_zMin), 0.0), 1.0) * 0.4 + 0.3; // h \in [0.3, 0.7]
+    else
+    {
+      h = std::min(std::max((h - m_zMin) / (m_zMax - m_zMin), 0.0), 1.0) * 0.4 + 0.3; // h \in [0.3, 0.7]
     }
 
     glArrayPos[0] = h;
     glArrayPos[1] = h;
     glArrayPos[2] = h;
   }
-  
 
 }

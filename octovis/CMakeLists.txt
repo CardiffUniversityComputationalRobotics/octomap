@@ -37,19 +37,19 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
   SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${BASE_DIR}/bin )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-# We need the main octomap library to link against (same version as octovis)
+# We need the main social_octomap library to link against (same version as octovis)
 # Look at parent directory by default, in case the complete distribution
-# (octomap & octovis together) is built.
+# (social_octomap & octovis together) is built.
 #
-# Otherwise you need to export octomap_DIR to the directory containing
-# the file octomap-config.cmake
-find_package(octomap ${OCTOVIS_MAJOR_VERSION}.${OCTOVIS_MINOR_VERSION} REQUIRED
-HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/octomap
-${CMAKE_SOURCE_DIR}/../octomap/lib/cmake/octomap
+# Otherwise you need to export social_octomap_DIR to the directory containing
+# the file social_octomap-config.cmake
+find_package(social_octomap ${OCTOVIS_MAJOR_VERSION}.${OCTOVIS_MINOR_VERSION} REQUIRED
+HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/social_octomap
+${CMAKE_SOURCE_DIR}/../social_octomap/lib/cmake/social_octomap
 )
-MESSAGE(STATUS "Found octomap version: " ${octomap_VERSION})
+MESSAGE(STATUS "Found social_octomap version: " ${social_octomap_VERSION})
 
-INCLUDE_DIRECTORIES(BEFORE SYSTEM ${OCTOMAP_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(BEFORE SYSTEM ${SOCIAL_OCTOMAP_INCLUDE_DIRS})
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
@@ -124,13 +124,13 @@ IF(BUILD_VIEWER)
     COMPATIBILITY AnyNewerVersion)
 
   # not used right now (export depends?)
-  #set(OCTOMAP_CMAKE_DIR "${PROJECT_BINARY_DIR}")
+  #set(SOCIAL_OCTOMAP_CMAKE_DIR "${PROJECT_BINARY_DIR}")
     
   # Create a octovis-config.cmake file for the use from the install tree
   # and install it
   set(OCTOVIS_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
   set(OCTOVIS_LIB_DIR "${CMAKE_INSTALL_FULL_LIBDIR}")
-  #set(OCTOMAP_CMAKE_DIR "${INSTALL_DATA_DIR}/FooBar/CMake")
+  #set(SOCIAL_OCTOMAP_CMAKE_DIR "${INSTALL_DATA_DIR}/FooBar/CMake")
 
   set(OCTOVIS_INCLUDE_TARGETS
     "include(\${CMAKE_CURRENT_LIST_DIR}/octovis-targets.cmake)")
@@ -165,7 +165,7 @@ IF(BUILD_VIEWER)
   
 ELSE()
     MESSAGE ( "Unfortunately, the viewer (octovis) can not be built because some requirements are missing.")
-	MESSAGE ( "This will not affect the compilation of the stand-alone library and tools (octomap)")
-    MESSAGE ( "See README.txt or http://octomap.sf.net for further information.\n")
+	MESSAGE ( "This will not affect the compilation of the stand-alone library and tools (social_octomap)")
+    MESSAGE ( "See README.txt or http://social_octomap.sf.net for further information.\n")
 ENDIF()
 
