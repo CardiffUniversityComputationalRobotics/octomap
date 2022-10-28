@@ -44,7 +44,7 @@ namespace social_octomap
 {
 
   OcTreeNode::OcTreeNode()
-      : OcTreeDataNode<float>(0.0)
+      : OcTreeDataNode<float>(0.0, false)
   {
   }
 
@@ -100,6 +100,11 @@ namespace social_octomap
   void OcTreeNode::addValue(const float &logOdds)
   {
     value += logOdds;
+  }
+
+  void OcTreeNode::setSocial(const bool &isSocial)
+  {
+    social = isSocial;
   }
 
 } // end namespace

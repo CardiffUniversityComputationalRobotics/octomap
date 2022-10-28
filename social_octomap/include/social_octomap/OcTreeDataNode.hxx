@@ -41,14 +41,14 @@ namespace social_octomap
   }
 
   template <typename T>
-  OcTreeDataNode<T>::OcTreeDataNode(T initVal)
-      : children(NULL), value(initVal)
+  OcTreeDataNode<T>::OcTreeDataNode(T initVal, const bool social)
+      : children(NULL), value(initVal), social(social)
   {
   }
 
   template <typename T>
-  OcTreeDataNode<T>::OcTreeDataNode(const OcTreeDataNode<T> &rhs)
-      : children(NULL), value(rhs.value)
+  OcTreeDataNode<T>::OcTreeDataNode(const OcTreeDataNode<T> &rhs, const bool social)
+      : children(NULL), value(rhs.value), social(social)
   {
     if (rhs.children != NULL)
     {

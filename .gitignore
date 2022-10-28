@@ -27,3 +27,15 @@ Makefile
 *.bt
 *.ot
 *.graph
+
+.qmake.stash
+.moc
+.obj
+libQGLViewer.prl
+libQGLViewer.so
+libQGLViewer.so.2
+libQGLViewer.so.2.6
+libQGLViewer.so.2.6.3
+
+ui_ImageInterface.h
+ui_VRenderInterface.h
