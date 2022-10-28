@@ -470,7 +470,7 @@ namespace social_octomap
     // recursive calls ----------------------------
 
     NODE *updateNodeRecurs(NODE *node, bool node_just_created, const OcTreeKey &key,
-                           unsigned int depth, const float &log_odds_update, bool lazy_eval = false);
+                           unsigned int depth, const float &log_odds_update, bool lazy_eval = false, bool social = false);
 
     NODE *setNodeValueRecurs(NODE *node, bool node_just_created, const OcTreeKey &key,
                              unsigned int depth, const float &log_odds_value, bool lazy_eval = false);

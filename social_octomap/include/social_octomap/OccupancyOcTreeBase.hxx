@@ -348,9 +348,13 @@ namespace social_octomap
       createdRoot = true;
     }
 
-    this->root->setSocial(social);
+    // this->root->setSocial(social);
 
-    return updateNodeRecurs(this->root, createdRoot, key, 0, log_odds_update, lazy_eval);
+    if (social)
+    {
+    }
+
+    return updateNodeRecurs(this->root, createdRoot, key, 0, log_odds_update, lazy_eval, social);
   }
 
   template <class NODE>
@@ -359,8 +363,11 @@ namespace social_octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(value, key))
       return NULL;
-    this->root->setSocial(social);
-    return updateNode(key, log_odds_update, lazy_eval);
+    // this->root->setSocial(social);
+    if (social)
+    {
+    }
+    return updateNode(key, log_odds_update, lazy_eval, social);
   }
 
   template <class NODE>
@@ -369,8 +376,11 @@ namespace social_octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(x, y, z, key))
       return NULL;
-    this->root->setSocial(social);
-    return updateNode(key, log_odds_update, lazy_eval);
+    // this->root->setSocial(social);
+    if (social)
+    {
+    }
+    return updateNode(key, log_odds_update, lazy_eval, social);
   }
 
   template <class NODE>
@@ -379,8 +389,11 @@ namespace social_octomap
     float logOdds = this->prob_miss_log;
     if (occupied)
       logOdds = this->prob_hit_log;
-    this->root->setSocial(social);
-    return updateNode(key, logOdds, lazy_eval);
+    // this->root->setSocial(social);
+    if (social)
+    {
+    }
+    return updateNode(key, logOdds, lazy_eval, social);
   }
 
   template <class NODE>
@@ -389,8 +402,11 @@ namespace social_octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(value, key))
       return NULL;
-    this->root->setSocial(social);
-    return updateNode(key, occupied, lazy_eval);
+    // this->root->setSocial(social);
+    if (social)
+    {
+    }
+    return updateNode(key, occupied, lazy_eval, social);
   }
 
   template <class NODE>
@@ -399,17 +415,24 @@ namespace social_octomap
     OcTreeKey key;
     if (!this->coordToKeyChecked(x, y, z, key))
       return NULL;
-    this->root->setSocial(social);
-    return updateNode(key, occupied, lazy_eval);
+    // this->root->setSocial(social);
+    if (social)
+    {
+    }
+    return updateNode(key, occupied, lazy_eval, social);
   }
 
   template <class NODE>
   NODE *OccupancyOcTreeBase<NODE>::updateNodeRecurs(NODE *node, bool node_just_created, const OcTreeKey &key,
-                                                    unsigned int depth, const float &log_odds_update, bool lazy_eval)
+                                                    unsigned int depth, const float &log_odds_update, bool lazy_eval, bool social)
   {
     bool created_node = false;
 
     assert(node);
+
+    if (social)
+    {
+    }
 
     // follow down to last level
     if (depth < this->tree_depth)

@@ -44,7 +44,7 @@ namespace social_octomap
 {
 
   OcTreeNode::OcTreeNode()
-      : OcTreeDataNode<float>(0.0, false)
+      : OcTreeDataNode<float>(0.0)
   {
   }
 

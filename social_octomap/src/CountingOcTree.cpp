@@ -40,7 +40,7 @@ namespace social_octomap
   /// implementation of CountingOcTreeNode  ----------------------------------
 
   CountingOcTreeNode::CountingOcTreeNode()
-      : OcTreeDataNode<unsigned int>(0, false)
+      : OcTreeDataNode<unsigned int>(0)
   {
   }
 

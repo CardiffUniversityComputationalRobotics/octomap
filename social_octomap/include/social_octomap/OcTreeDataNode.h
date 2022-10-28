@@ -68,11 +68,11 @@ namespace social_octomap
 
   public:
     OcTreeDataNode();
-    OcTreeDataNode(T initVal, const bool social);
+    OcTreeDataNode(T initVal);
 
     /// Copy constructor, performs a recursive deep-copy of all children
     /// including node data in "value"
-    OcTreeDataNode(const OcTreeDataNode &rhs, const bool social);
+    OcTreeDataNode(const OcTreeDataNode &rhs);
 
     /// Delete only own members.
     /// OcTree maintains tree structure and must have deleted children already
