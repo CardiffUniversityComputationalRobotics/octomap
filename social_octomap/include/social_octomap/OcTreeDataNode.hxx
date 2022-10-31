@@ -47,6 +47,12 @@ namespace social_octomap
   }
 
   template <typename T>
+  OcTreeDataNode<T>::OcTreeDataNode(T initVal, bool social)
+      : children(NULL), value(initVal), social(social)
+  {
+  }
+
+  template <typename T>
   OcTreeDataNode<T>::OcTreeDataNode(const OcTreeDataNode<T> &rhs)
       : children(NULL), value(rhs.value)
   {
@@ -57,6 +63,21 @@ namespace social_octomap
       {
         if (rhs.children[i] != NULL)
           children[i] = new OcTreeDataNode<T>(*(static_cast<OcTreeDataNode<T> *>(rhs.children[i])));
+      }
+    }
+  }
+
+  template <typename T>
+  OcTreeDataNode<T>::OcTreeDataNode(const OcTreeDataNode<T> &rhs, bool social)
+      : children(NULL), value(rhs.value), social(social)
+  {
+    if (rhs.children != NULL)
+    {
+      allocChildren();
+      for (unsigned i = 0; i < 8; ++i)
+      {
+        if (rhs.children[i] != NULL)
+          children[i] = new OcTreeDataNode<T>(*(static_cast<OcTreeDataNode<T> *>(rhs.children[i], social)));
       }
     }
   }

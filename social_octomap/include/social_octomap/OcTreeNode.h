@@ -38,6 +38,7 @@
 #include "social_octomap_utils.h"
 #include "OcTreeDataNode.h"
 #include <limits>
+#include <string>
 
 namespace social_octomap
 {
@@ -91,6 +92,8 @@ namespace social_octomap
 
     /// defined wether a Node is social considered or not
     void setSocial(const bool &isSocial);
+
+    std::string getSocial();
 
   protected:
     // "value" stores log odds occupancy probability

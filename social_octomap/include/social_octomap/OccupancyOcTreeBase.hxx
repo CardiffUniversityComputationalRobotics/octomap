@@ -352,6 +352,7 @@ namespace social_octomap
 
     if (social)
     {
+      std::cout << "running update node 1" << std::endl;
     }
 
     return updateNodeRecurs(this->root, createdRoot, key, 0, log_odds_update, lazy_eval, social);
@@ -366,6 +367,7 @@ namespace social_octomap
     // this->root->setSocial(social);
     if (social)
     {
+      std::cout << "running update node 2" << std::endl;
     }
     return updateNode(key, log_odds_update, lazy_eval, social);
   }
@@ -379,6 +381,7 @@ namespace social_octomap
     // this->root->setSocial(social);
     if (social)
     {
+      std::cout << "running update node 3" << std::endl;
     }
     return updateNode(key, log_odds_update, lazy_eval, social);
   }
@@ -389,9 +392,10 @@ namespace social_octomap
     float logOdds = this->prob_miss_log;
     if (occupied)
       logOdds = this->prob_hit_log;
-    // this->root->setSocial(social);
     if (social)
     {
+      this->root->setSocial(social);
+      std::cout << "running update node 4" << this->root->getSocial() << std::endl;
     }
     return updateNode(key, logOdds, lazy_eval, social);
   }
@@ -405,6 +409,7 @@ namespace social_octomap
     // this->root->setSocial(social);
     if (social)
     {
+      std::cout << "running update node 5" << std::endl;
     }
     return updateNode(key, occupied, lazy_eval, social);
   }
@@ -418,6 +423,7 @@ namespace social_octomap
     // this->root->setSocial(social);
     if (social)
     {
+      std::cout << "running update node 6" << std::endl;
     }
     return updateNode(key, occupied, lazy_eval, social);
   }
@@ -432,6 +438,7 @@ namespace social_octomap
 
     if (social)
     {
+      std::cout << "running update node 7" << std::endl;
     }
 
     // follow down to last level

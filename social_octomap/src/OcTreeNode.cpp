@@ -38,13 +38,15 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+#include <string>
+
 #include <social_octomap/OcTreeNode.h>
 
 namespace social_octomap
 {
 
   OcTreeNode::OcTreeNode()
-      : OcTreeDataNode<float>(0.0)
+      : OcTreeDataNode<float>(0.0, false)
   {
   }
 
@@ -105,6 +107,18 @@ namespace social_octomap
   void OcTreeNode::setSocial(const bool &isSocial)
   {
     social = isSocial;
+  }
+
+  std::string OcTreeNode::getSocial()
+  {
+    if (social)
+    {
+      return "social";
+    }
+    else
+    {
+      return "not social";
+    }
   }
 
 } // end namespace
